@@ -1,0 +1,328 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CITIZEN
+  MAYOR
+  ADMIN
+
+}
+
+enum IncidentType {
+  MEDICAL
+  SECURITY
+  TRAFFIC
+  INFRASTRUCTURE
+
+}
+
+enum IncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+
+}
+
+enum IncidentStatus {
+  PENDING
+  ACKNOWLEDGED
+  IN_PROGRESS
+  ESCALATED
+  RESOLVED
+  CLOSED
+
+}
+
+enum EscalateToRole {
+  MAYOR
+  ADMIN
+
+}
+
+enum AssignmentStatus {
+  ACTIVE
+  INACTIVE
+  COMPLETED
+
+}
+
+enum AssetType {
+  GATE
+  POWER_NODE
+  ROAD
+  PARKING_ZONE
+  PATHWAY
+  BUILDING
+
+}
+
+enum AssetStatus {
+  OPERATIONAL
+  DEGRADED
+  OFFLINE
+  UNDER_MAINTENANCE
+
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+
+}
+
+enum NotificationType {
+  INCIDENT_UPDATE
+  ASSIGNMENT
+  ALERT
+  ESCALATION
+  SYSTEM
+
+}
+
+enum NotificationChannel {
+  SMS
+  WHATSAPP
+  WEBSOCKET
+  PUSH
+
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  DELIVERED
+
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  phone        String   @unique
+  passwordHash String
+  role         Role     @default(CITIZEN)
+  zoneId       String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  zone             Zone?               @relation(fields: [zoneId], references: [id])
+  reportedIncidents Incident[]         @relation("ReportedIncidents")
+  assignedIncidents Incident[]         @relation("AssignedIncidents")
+  assignments      MarshalAssignment[] @relation("MayorAssignments")
+  assignedBy       MarshalAssignment[] @relation("AdminAssignments")
+  location         MarshalLocation?
+  notifications    Notification[]
+  reportedTickets  MaintenanceTicket[] @relation("ReportedTickets")
+  assignedTickets  MaintenanceTicket[] @relation("AssignedTickets")
+  maintenanceLogs  MaintenanceLog[]
+  escalationRules  EscalationRule[]
+
+}
+
+model Zone {
+  id          String   @id @default(uuid())
+  name        String
+  code        String   @unique
+  description String?
+  coordinates Json?
+  capacity    Int?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       User[]
+  incidents   Incident[]
+  assignments MarshalAssignment[]
+  assets      Asset[]
+
+}
+
+model Incident {
+  id            String           @id @default(uuid())
+  referenceCode String           @unique
+  type          IncidentType
+  severity      IncidentSeverity
+  status        IncidentStatus   @default(PENDING)
+  title         String
+  description   String?
+  zoneId        String
+  reporterId    String
+  assignedTo    String?
+  locationLat   Float?
+  locationLng   Float?
+  mediaUrls     Json             @default("[]")
+  resolvedAt    DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  zone             Zone              @relation(fields: [zoneId], references: [id])
+  reporter         User              @relation("ReportedIncidents", fields: [reporterId], references: [id])
+  assignee         User?             @relation("AssignedIncidents", fields: [assignedTo], references: [id])
+  escalationLogs   EscalationLog[]
+  maintenanceTicket MaintenanceTicket?
+
+  @@index([zoneId, status, type, severity, createdAt])
+
+}
+
+model EscalationRule {
+  id            String           @id @default(uuid())
+  incidentType  IncidentType?
+  severity      IncidentSeverity?
+  windowSeconds Int
+  escalateTo    EscalateToRole
+  notifyVia     Json             @default("[\"SMS\",\"WEBSOCKET\"]")
+  isActive      Boolean          @default(true)
+  createdById   String
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  createdBy User            @relation(fields: [createdById], references: [id])
+  logs      EscalationLog[]
+
+}
+
+model EscalationLog {
+  id            String   @id @default(uuid())
+  incidentId    String
+  ruleId        String?
+  fromStatus    String?
+  toStatus      String
+  triggeredAt   DateTime @default(now())
+  reason        String?
+  notifiedUsers Json     @default("[]")
+  createdAt     DateTime @default(now())
+
+  incident Incident       @relation(fields: [incidentId], references: [id])
+  rule     EscalationRule? @relation(fields: [ruleId], references: [id])
+
+  @@index([incidentId, triggeredAt])
+
+}
+
+model MarshalAssignment {
+  id           String           @id @default(uuid())
+  mayorId      String
+  zoneId       String
+  assignedById String
+  status       AssignmentStatus @default(ACTIVE)
+  instructions String?
+  startTime    DateTime         @default(now())
+  endTime      DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  mayor      User @relation("MayorAssignments", fields: [mayorId], references: [id])
+  zone       Zone @relation(fields: [zoneId], references: [id])
+  assignedBy User @relation("AdminAssignments", fields: [assignedById], references: [id])
+
+  @@index([mayorId, zoneId, status])
+
+}
+
+model MarshalLocation {
+  id        String   @id @default(uuid())
+  mayorId   String   @unique
+  lat       Float
+  lng       Float
+  accuracy  Float?
+  updatedAt DateTime @updatedAt
+
+  mayor User @relation(fields: [mayorId], references: [id])
+
+}
+
+model Asset {
+  id              String     @id @default(uuid())
+  name            String
+  type            AssetType
+  zoneId          String
+  code            String     @unique
+  description     String?
+  status          AssetStatus @default(OPERATIONAL)
+  lastInspectedAt DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  zone    Zone               @relation(fields: [zoneId], references: [id])
+  tickets MaintenanceTicket[]
+
+}
+
+model MaintenanceTicket {
+  id           String        @id @default(uuid())
+  ticketNumber String        @unique
+  assetId      String
+  incidentId   String?       @unique
+  title        String
+  description  String?
+  priority     TicketPriority @default(MEDIUM)
+  status       TicketStatus  @default(OPEN)
+  assignedToId String?
+  reportedById String
+  dueDate      DateTime?
+  resolvedAt   DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  asset      Asset             @relation(fields: [assetId], references: [id])
+  incident   Incident?         @relation(fields: [incidentId], references: [id])
+  assignedTo User?             @relation("AssignedTickets", fields: [assignedToId], references: [id])
+  reportedBy User              @relation("ReportedTickets", fields: [reportedById], references: [id])
+  logs       MaintenanceLog[]
+
+  @@index([assetId, status, priority])
+
+}
+
+model MaintenanceLog {
+  id          String   @id @default(uuid())
+  ticketId    String
+  updatedById String
+  oldStatus   String?
+  newStatus   String
+  note        String?
+  createdAt   DateTime @default(now())
+
+  ticket     MaintenanceTicket @relation(fields: [ticketId], references: [id])
+  updatedBy User              @relation(fields: [updatedById], references: [id])
+
+}
+
+model Notification {
+  id            String             @id @default(uuid())
+  userId        String
+  type          NotificationType
+  channel       NotificationChannel
+  title         String?
+  body          String?
+  referenceId   String?
+  referenceType String?
+  status        NotificationStatus @default(PENDING)
+  sentAt        DateTime?
+  createdAt     DateTime           @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, status])
+
+}
