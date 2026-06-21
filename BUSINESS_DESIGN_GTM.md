@@ -2,7 +2,7 @@
 
 ## Problem
 
-Rapidly urbanizing cities in Africa face a critical safety gap: citizens have no direct channel to report incidents (medical emergencies, security threats, traffic disruptions, infrastructure failures), and city authorities lack a structured system to dispatch responders, track resolution, and prevent incidents from falling through the cracks. Emergency calls go unanswered, response is uncoordinated, and there is zero visibility into city-wide operational health.
+Redemption City — a large-scale faith-based managed city with peak populations exceeding millions — has no centralized incident reporting system. Citizens have no direct channel to report medical emergencies, security threats, traffic disruptions, or infrastructure failures. City authorities lack a structured system to dispatch responders, track resolution, and prevent incidents from falling through the cracks. Calls go unanswered, response is uncoordinated, and there is zero visibility into city-wide operational health.
 
 ## Solution
 
@@ -19,13 +19,13 @@ HaloCity is a three-role real-time incident management platform that connects ci
 - Existing security committee infrastructure
 - High density of reported incidents with no centralized system
 
-### Secondary — Other Nigerian Smart Cities
+### Secondary — Other Managed Cities (Nigeria)
 - Eko Atlantic City, Lagos
 - Centenary City, Abuja
-- Ongoing state-level smart city initiatives (Lagos, Rivers, Akwa Ibom)
 
-### Tertiary — Pan-African Managed Cities
-- Tatu City (Kenya), Appolonia City (Ghana), Diamniadio (Senegal)
+### Tertiary — Africa Faith-Based & Managed Cities
+- Canaanland, Ota
+- Tatu City (Kenya), Appolonia City (Ghana)
 
 ## Business Model
 
@@ -51,14 +51,14 @@ Historical incident trends, heat maps, response-time benchmarks — sold as quar
 - Monthly review with city leadership
 
 ### Phase 2 — Regional Expansion (Months 4–9)
-- Target 3 additional cities (Lagos command centers, Abuja satellite towns, Port Harcourt)
-- Hire local deployment officers per city
-- Integrate with existing state emergency numbers where possible
+- Target 2 additional managed cities (Canaanland, Eko Atlantic City)
+- Hire local deployment officers per location
+- Integrate with existing security team workflows
 
 ### Phase 3 — Platform Scale (Months 10–18)
 - Open API for third-party integrations (ambulance dispatch, fire service, traffic management)
 - Mobile SDK for citizen app embed in existing municipal apps
-- Partner with security firms (e.g., Halogen Security, G4S Nigeria) for marshal network augmentation
+- Partner with security firms for marshal network augmentation
 
 ## Competitive Advantage
 
