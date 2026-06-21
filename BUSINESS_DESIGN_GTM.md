@@ -6,11 +6,11 @@ Redemption City — a large-scale faith-based managed city with peak populations
 
 ## Solution
 
-HaloCity is a three-role real-time incident management platform that connects citizens, field responders (marshals), and command center administrators in a single pipeline:
+HaloCity is a three-role real-time incident management platform that connects citizens, field responders (Mayors), and command center administrators in a single pipeline:
 
 - **Citizens** report incidents in seconds — the system auto-classifies severity and escalates if unacknowledged
-- **Marshals** receive zone-scoped assignments, update status, and stream live GPS location
-- **Administrators** see the full city picture: live map, zone density, marshal positions, escalation backstop
+- **Mayors** receive zone-scoped assignments, update status, and stream live GPS location
+- **Administrators** see the full city picture: live map, zone density, Mayor positions, escalation backstop
 
 ## Target Market
 
@@ -30,7 +30,7 @@ HaloCity is a three-role real-time incident management platform that connects ci
 ## Business Model
 
 ### Tier 1 — City/Local Government License
-Annual licensing fee per zone/ward. Includes admin dashboard, marshal management, escalation engine, and priority support.
+Annual licensing fee per zone/ward. Includes admin dashboard, Mayor management, escalation engine, and priority support.
 
 - Small city (≤5 zones): ₦5M/year
 - Medium city (6–15 zones): ₦12M/year
@@ -46,7 +46,7 @@ Historical incident trends, heat maps, response-time benchmarks — sold as quar
 
 ### Phase 1 — Pilot (Months 1–3)
 - Deploy at Redemption City in partnership with the security committee
-- Onboard 3–5 zones, 20 marshals, unlimited citizens
+- Onboard 3–5 zones, 20 Mayors, unlimited citizens
 - Gather response-time baselines and escalation data
 - Monthly review with city leadership
 
@@ -58,14 +58,14 @@ Historical incident trends, heat maps, response-time benchmarks — sold as quar
 ### Phase 3 — Platform Scale (Months 10–18)
 - Open API for third-party integrations (ambulance dispatch, fire service, traffic management)
 - Mobile SDK for citizen app embed in existing municipal apps
-- Partner with security firms for marshal network augmentation
+- Partner with security firms for Mayor network augmentation
 
 ## Competitive Advantage
 
 | Factor | HaloCity | Traditional (Phone/Radio) | Generic Ticketing (Jira, Zendesk) |
 |---|---|---|---|
 | Real-time | ✅ Socket.IO push | ❌ | ❌ |
-| Role architecture | 3 roles (citizen, marshal, admin) | ❌ | ❌ (agent/customer only) |
+| Role architecture | 3 roles (citizen, Mayor, admin) | ❌ | ❌ (agent/customer only) |
 | Auto-escalation | ✅ BullMQ + configurable rules | ❌ | ❌ |
 | Live GPS tracking | ✅ Independent of incidents | ❌ | ❌ |
 | Offline-friendly | ✅ SMS fallback via Termii | ✅ (phone only) | ❌ |
@@ -77,7 +77,7 @@ Historical incident trends, heat maps, response-time benchmarks — sold as quar
 - **Time-to-acknowledge** (target: <2 min for CRITICAL)
 - **Time-to-resolve** (target: <15 min for MEDICAL)
 - **Escalation rate** (target: <5% of incidents reach tier 2)
-- **Marshal coverage ratio** (target: 2 marshals per zone minimum)
+- **Mayor coverage ratio** (target: 2 Mayors per zone minimum)
 - **Citizen engagement** (target: >60% of reporters track their incident to resolution)
 
 ## Revenue Projections (Year 1)
@@ -93,7 +93,7 @@ Historical incident trends, heat maps, response-time benchmarks — sold as quar
 
 | Risk | Mitigation |
 |---|---|
-| Low marshal adoption | Include marshal app in city security team SOP; provide training |
+| Low Mayor adoption | Include Mayor app in city security team SOP; provide training |
 | Citizen trust in reporting | Public awareness campaigns; showcase resolved incidents |
 | Internet reliability | SMS fallback via Termii for all notification channels |
 | Competitor replication | Patent pending for escalation engine + zone-scoped architecture |
