@@ -5,7 +5,7 @@ import logger from '../../config/logger.js';
 import prisma from '../../shared/prisma.js';
 import { escalationQueue } from '../queue-client.js';
 import { dispatch } from '../../modules/notifications/notifications.service.js';
-import { emitIncidentEscalated } from '../../websocket/socket-events.js';
+import { emitIncidentEscalated, emitIncidentUpdated } from '../../websocket/socket-events.js';
 
 const url = new URL(config.REDIS_URL);
 const connection = {
@@ -37,10 +37,17 @@ async function processEscalation(job) {
     return;
   }
 
-  await prisma.incident.update({
+  const updated = await prisma.incident.update({
     where: { id: incidentId },
     data: { status: 'ESCALATED' },
+    include: {
+      zone: true,
+      reporter: { select: { id: true, name: true } },
+      assignee: { select: { id: true, name: true } },
+    },
   });
+
+  emitIncidentUpdated(updated);
 
   await prisma.escalationLog.create({
     data: {

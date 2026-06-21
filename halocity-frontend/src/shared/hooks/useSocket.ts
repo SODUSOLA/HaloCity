@@ -35,9 +35,12 @@ export function useSocket(token: string | null) {
       }
     }
 
-    const handleIncidentEscalated = () => {
+    const handleIncidentEscalated = (data: { id?: string }) => {
       queryClient.invalidateQueries({ queryKey: ['incidents'] })
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      if (data?.id) {
+        queryClient.invalidateQueries({ queryKey: ['incidents', data.id] })
+      }
       showBanner({
         title: 'Incident Escalated',
         message: 'An incident has been escalated to a higher priority.',

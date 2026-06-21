@@ -58,7 +58,7 @@ async function processNotification(job) {
     } else if (channel === 'WEBSOCKET') {
       try {
         const io = getIO();
-        const room = user.role === 'ADMIN' ? 'admin' : `citizen:${user.id}`;
+        const room = user.role === 'ADMIN' ? 'admin' : user.role === 'MAYOR' ? `mayor:${user.id}` : `citizen:${user.id}`;
         io.to(room).emit('notification', {
           id: notification.id,
           type: notification.type,

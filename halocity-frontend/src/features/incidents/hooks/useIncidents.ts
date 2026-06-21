@@ -15,7 +15,7 @@ import type { CreateIncidentInput } from '@/features/incidents/types'
 
 export function useIncidents(params?: IncidentsListParams) {
   return useQuery({
-    queryKey: ['incidents', params],
+    queryKey: params ? ['incidents', params] : ['incidents'],
     queryFn: () => fetchIncidents(params),
   })
 }
