@@ -100,6 +100,7 @@ export async function getAllMarshals() {
       email: true,
       phone: true,
       isActive: true,
+      updatedAt: true,
     },
   });
 
@@ -138,6 +139,7 @@ export async function getAllMarshals() {
         email: user.email,
         phone: user.phone,
         isActive: user.isActive,
+        updatedAt: user.updatedAt?.toISOString() || null,
         currentAssignment: assignment || null,
         zone: assignment?.zone || null,
         location,

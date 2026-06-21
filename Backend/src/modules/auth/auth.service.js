@@ -53,9 +53,12 @@ export async function login(data) {
   }
 
   const isPasswordValid = await bcrypt.compare(data.password, user.passwordHash);
-  if (!isPasswordValid) {
+  if (!  isPasswordValid) {
     throw new UnauthorizedError('Invalid email or password');
   }
+
+  // Record login timestamp for "last active" tracking
+  await prisma.user.update({ where: { id: user.id }, data: {} });
 
   const token = signToken({ id: user.id, role: user.role, zoneId: user.zoneId });
 

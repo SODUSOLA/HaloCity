@@ -123,7 +123,7 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="rounded-lg border border-border p-4">
-          <p className="text-xs text-[#64748B]">Online Marshals</p>
+          <p className="text-xs text-[#64748B]">Online Mayors</p>
           <p className="mt-1 text-3xl font-bold text-primary">
             {s?.activeMarshals ?? 0}
           </p>

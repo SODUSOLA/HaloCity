@@ -14,7 +14,7 @@ import { useAuth } from '@/shared/stores/AuthContext'
 const navItems = [
   { to: '/command', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/command/incidents', label: 'Incidents', icon: AlertTriangle },
-  { to: '/command/marshals', label: 'Marshals', icon: Users },
+  { to: '/command/marshals', label: 'Mayors', icon: Users },
   { to: '/command/zones', label: 'Zones', icon: MapPin },
   { to: '/command/maintenance', label: 'Maintenance', icon: Wrench },
   { to: '/command/escalation-rules', label: 'Escalation', icon: GitBranch },

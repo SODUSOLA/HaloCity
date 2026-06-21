@@ -5,6 +5,10 @@ import {
   createIncident,
   updateIncidentStatus,
   assignIncident,
+  fetchEscalationRules,
+  createEscalationRule,
+  updateEscalationRule,
+  deleteEscalationRule,
   type IncidentsListParams,
 } from '@/features/incidents/api/incidents.api'
 import type { CreateIncidentInput } from '@/features/incidents/types'
@@ -57,6 +61,44 @@ export function useAssignIncident() {
       queryClient.invalidateQueries({ queryKey: ['incidents', id] })
       queryClient.invalidateQueries({ queryKey: ['incidents'] })
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+    },
+  })
+}
+
+export function useEscalationRules() {
+  return useQuery({
+    queryKey: ['escalation-rules'],
+    queryFn: fetchEscalationRules,
+  })
+}
+
+export function useCreateEscalationRule() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: createEscalationRule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['escalation-rules'] })
+    },
+  })
+}
+
+export function useUpdateEscalationRule() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, ...data }: { id: string } & Record<string, unknown>) =>
+      updateEscalationRule(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['escalation-rules'] })
+    },
+  })
+}
+
+export function useDeleteEscalationRule() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: deleteEscalationRule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['escalation-rules'] })
     },
   })
 }

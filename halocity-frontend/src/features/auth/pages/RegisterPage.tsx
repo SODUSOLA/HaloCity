@@ -84,7 +84,7 @@ export default function RegisterPage() {
                       : 'border-border text-[#64748B] hover:border-primary/50',
                   )}
                 >
-                  {role === 'CITIZEN' ? 'Citizen' : 'Marshal'}
+                  {role === 'CITIZEN' ? 'Citizen' : 'Mayor'}
                 </button>
               ))}
             </div>

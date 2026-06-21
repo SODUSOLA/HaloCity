@@ -47,7 +47,7 @@ export async function fetchLiveIncidents() {
 }
 
 export async function fetchNotifications() {
-  const { data } = await api.get('/notifications')
+  const { data } = await api.get('/notifications', { params: { channel: 'WEBSOCKET' } })
   return data
 }
 
@@ -63,4 +63,32 @@ export async function uploadFile(file: File): Promise<string> {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
   return data.url
+}
+
+// Escalation Rules
+export async function fetchEscalationRules() {
+  const { data } = await api.get('/escalation/rules')
+  return data
+}
+
+export async function createEscalationRule(rule: {
+  incidentType?: string | null
+  severity?: string | null
+  windowSeconds: number
+  escalateTo: string
+  notifyVia?: string[]
+  isActive?: boolean
+}) {
+  const { data } = await api.post('/escalation/rules', rule)
+  return data
+}
+
+export async function updateEscalationRule(id: string, rule: Record<string, unknown>) {
+  const { data } = await api.patch(`/escalation/rules/${id}`, rule)
+  return data
+}
+
+export async function deleteEscalationRule(id: string) {
+  const { data } = await api.delete(`/escalation/rules/${id}`)
+  return data
 }

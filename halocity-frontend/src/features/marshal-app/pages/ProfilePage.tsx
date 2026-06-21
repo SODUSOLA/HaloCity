@@ -32,7 +32,7 @@ export default function ProfilePage() {
         </div>
         <h2 className="text-lg font-semibold text-[#0F172A]">{user?.name}</h2>
         <AvailabilityIndicator availability={availability} className="mt-1" />
-        <p className="mt-1 text-xs text-[#64748B]">Marshal</p>
+        <p className="mt-1 text-xs text-[#64748B]">Mayor</p>
       </div>
 
       <div className="space-y-3">

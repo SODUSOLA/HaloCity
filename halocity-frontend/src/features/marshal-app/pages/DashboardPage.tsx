@@ -1,10 +1,21 @@
 import { ClipboardList } from 'lucide-react'
+import { useAuth } from '@/shared/stores/AuthContext'
 import { useIncidents } from '@/features/incidents/hooks/useIncidents'
 import { AssignmentCard } from '@/features/marshals/components/AssignmentCard'
 import { KPISkeleton } from '@/shared/components/LoadingSkeletons'
 import { isToday } from '@/shared/lib/geo'
 
+const greetings = ['Good morning', 'Good afternoon', 'Good evening']
+
+function greet() {
+  const h = new Date().getHours()
+  if (h < 12) return greetings[0]
+  if (h < 17) return greetings[1]
+  return greetings[2]
+}
+
 export default function DashboardPage() {
+  const { user } = useAuth()
   const { data: incidents, isLoading } = useIncidents()
 
   const assigned = incidents?.filter(
@@ -28,7 +39,10 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 p-4">
-      <h1 className="text-lg font-semibold text-[#0F172A]">Dashboard</h1>
+      <div>
+        <h1 className="text-lg font-semibold text-[#0F172A]">{greet()}, {user?.name?.split(' ')[0] || 'Mayor'}</h1>
+        <p className="text-xs text-[#64748B]">Here's your current status</p>
+      </div>
 
       <div className="grid grid-cols-3 gap-3">
         <div className="rounded-lg border border-border p-3">

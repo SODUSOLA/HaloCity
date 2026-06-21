@@ -22,7 +22,7 @@ export default function ProfilePage() {
         </div>
         <h2 className="text-lg font-semibold text-[#0F172A]">{user?.name}</h2>
         <p className="text-xs text-[#64748B]">
-          {user?.role === 'CITIZEN' ? 'Citizen' : user?.role === 'MAYOR' ? 'Marshal' : 'Admin'}
+          {user?.role === 'CITIZEN' ? 'Citizen' : user?.role === 'MAYOR' ? 'Mayor' : 'Admin'}
         </p>
       </div>
 
@@ -46,7 +46,7 @@ export default function ProfilePage() {
           <div>
             <p className="text-xs text-[#94A3B8]">Role</p>
             <p className="text-sm text-[#0F172A]">
-              {user?.role === 'CITIZEN' ? 'Citizen' : user?.role === 'MAYOR' ? 'Marshal' : 'Admin'}
+              {user?.role === 'CITIZEN' ? 'Citizen' : user?.role === 'MAYOR' ? 'Mayor' : 'Admin'}
             </p>
           </div>
         </div>

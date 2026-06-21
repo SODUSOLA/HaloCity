@@ -19,3 +19,13 @@ export async function updateMarshalLocation(lat: number, lng: number) {
   const { data } = await api.patch('/marshals/location', { lat, lng })
   return data
 }
+
+export async function assignMarshalToZone(mayorId: string, zoneId: string) {
+  const { data } = await api.post('/marshals/assign', { mayorId, zoneId })
+  return data
+}
+
+export async function endMarshalAssignment(assignmentId: string) {
+  const { data } = await api.patch(`/marshals/${assignmentId}/end`)
+  return data
+}

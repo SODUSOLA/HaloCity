@@ -42,10 +42,10 @@ export function IncidentDetailSheet({
     if (!assignTo) return
     try {
       await assignIncident.mutateAsync({ id: incidentId, mayorId: assignTo })
-      toast.success('Marshal assigned')
+      toast.success('Mayor assigned')
       setAssignTo('')
     } catch {
-      toast.error('Failed to assign marshal')
+      toast.error('Failed to assign mayor')
     }
   }
 
@@ -127,7 +127,7 @@ export function IncidentDetailSheet({
                 <div className="flex items-center gap-2">
                   <Select value={assignTo} onValueChange={setAssignTo}>
                     <SelectTrigger className="flex-1">
-                      <SelectValue placeholder="Assign marshal..." />
+                      <SelectValue placeholder="Assign mayor..." />
                     </SelectTrigger>
                     <SelectContent>
                       {Array.isArray(marshals) &&

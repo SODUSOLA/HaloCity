@@ -11,8 +11,8 @@ router.get(
   '/',
   authMiddleware,
   catchAsync(async (req, res) => {
-    const pagination = parsePagination(req.query);
-    const result = await getNotifications(req.user.id, pagination);
+    const { page, limit } = parsePagination(req.query);
+    const result = await getNotifications(req.user.id, { page, limit, channel: req.query.channel });
     return success(res, 'Notifications retrieved', result.data, 200, result.meta);
   })
 );

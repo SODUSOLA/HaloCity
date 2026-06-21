@@ -46,17 +46,19 @@ export async function dispatch({ userId, type, channel, title, body, referenceId
   }
 }
 
-export async function getNotifications(userId, { page = 1, limit = 20 }) {
+export async function getNotifications(userId, { page = 1, limit = 20, channel }) {
   const skip = (page - 1) * limit;
+  const where = { userId };
+  if (channel) where.channel = channel;
 
   const [notifications, total, unreadCount] = await Promise.all([
     prisma.notification.findMany({
-      where: { userId },
+      where,
       orderBy: { createdAt: 'desc' },
       skip,
       take: limit,
     }),
-    prisma.notification.count({ where: { userId } }),
+    prisma.notification.count({ where }),
     prisma.notification.count({ where: { userId, status: 'PENDING' } }),
   ]);
 
