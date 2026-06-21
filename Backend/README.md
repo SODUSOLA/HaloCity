@@ -116,7 +116,7 @@ List incidents. Scoped by role:
 | Role | Scope |
 |---|---|
 | Admin | All incidents city-wide |
-| Marshal | Incidents in assigned zone + personally assigned incidents |
+| mayor | Incidents in assigned zone + personally assigned incidents |
 | Citizen | Own reports only |
 
 **Query params:** `page`, `limit`, `status`, `type`, `severity`, `zoneId`
@@ -125,14 +125,14 @@ List incidents. Scoped by role:
 
 Single incident detail. Role-scoped:
 - Admin: any incident
-- Marshal: incidents in own zone or personally assigned
+- mayor: incidents in own zone or personally assigned
 - Citizen: own reports only
 
 Includes `zone`, `reporter`, `assignee`, and `escalationLogs`.
 
 ### `PATCH /incidents/:id/status`
 
-Marshal or Admin. Update incident status.
+mayor or Admin. Update incident status.
 
 **Request body:**
 ```json
@@ -155,17 +155,17 @@ When moving to `RESOLVED`, `resolvedAt` is automatically set. When moving to `AC
 
 ### `PATCH /incidents/:id/assign`
 
-Admin only. Assign a marshal to an incident.
+Admin only. Assign a mayor to an incident.
 
 **Request body:**
 ```json
 { "mayorId": "uuid-of-mayor-user" }
 ```
 
-The marshal must have role `MAYOR`. Assignment triggers:
+The mayor must have role `MAYOR`. Assignment triggers:
 1. Incident status → `ACKNOWLEDGED` (if currently `PENDING`)
-2. WebSocket `incident:updated` to admin, citizen, zone, and assigned marshal rooms
-3. SMS + WebSocket notification to the assigned marshal
+2. WebSocket `incident:updated` to admin, citizen, zone, and assigned mayor rooms
+3. SMS + WebSocket notification to the assigned mayor
 
 ---
 
@@ -203,47 +203,47 @@ Admin only. Activate/deactivate zone.
 
 ---
 
-## Marshals
+## mayors
 
-### `GET /marshals`
+### `GET /mayors`
 
 Admin only. List all MAYOR users with their current active assignment and location.
 
-### `GET /marshals/active`
+### `GET /mayors/active`
 
-Admin only. List marshals with active zone assignments (enriched with location data).
+Admin only. List mayors with active zone assignments (enriched with location data).
 
-### `GET /marshals/zone/:zoneId`
+### `GET /mayors/zone/:zoneId`
 
-Admin or Marshal. List marshals assigned to a specific zone.
+Admin or mayor. List mayors assigned to a specific zone.
 
-### `POST /marshals/assign`
+### `POST /mayors/assign`
 
-Admin only. Assign a marshal to a zone.
+Admin only. Assign a mayor to a zone.
 
 **Request body:**
 ```json
 { "mayorId": "uuid", "zoneId": "uuid", "instructions": "Cover Gate A" }
 ```
 
-Creates a `MarshalAssignment` record, updates the user's `zoneId`, and emits a `marshal:assigned` socket event.
+Creates a `mayorAssignment` record, updates the user's `zoneId`, and emits a `mayor:assigned` socket event.
 
-### `PATCH /marshals/location`
+### `PATCH /mayors/location`
 
-Marshal only. Update own GPS location.
+mayor only. Update own GPS location.
 
 **Request body:**
 ```json
 { "lat": 6.5244, "lng": 3.3792, "accuracy": 12 }
 ```
 
-Stored in both PostgreSQL (`MarshalLocation`) and Redis (5-minute TTL). Emits `marshal:location_updated` to admin room.
+Stored in both PostgreSQL (`mayorLocation`) and Redis (5-minute TTL). Emits `mayor:location_updated` to admin room.
 
-### `GET /marshals/me`
+### `GET /mayors/me`
 
-Marshal only. Get own active assignment details, zone info, and location.
+mayor only. Get own active assignment details, zone info, and location.
 
-### `POST /marshals/corridor`
+### `POST /mayors/corridor`
 
 Admin only. Dispatch a corridor alert to one or more zones.
 
@@ -257,11 +257,11 @@ Admin only. Dispatch a corridor alert to one or more zones.
 }
 ```
 
-Notifies marshals (SMS + WebSocket) and citizens in affected zones (WebSocket). Also emits `zone:alert` socket event.
+Notifies mayors (SMS + WebSocket) and citizens in affected zones (WebSocket). Also emits `zone:alert` socket event.
 
-### `PATCH /marshals/:assignmentId/end`
+### `PATCH /mayors/:assignmentId/end`
 
-Admin only. End a marshal's zone assignment. Clears `User.zoneId`, removes from Redis sets.
+Admin only. End a mayor's zone assignment. Clears `User.zoneId`, removes from Redis sets.
 
 ---
 
@@ -269,11 +269,11 @@ Admin only. End a marshal's zone assignment. Clears `User.zoneId`, removes from 
 
 ### `GET /maintenance/assets`
 
-Admin or Marshal. List all assets.
+Admin or mayor. List all assets.
 
 ### `GET /maintenance/assets/:id`
 
-Admin or Marshal. Single asset detail.
+Admin or mayor. Single asset detail.
 
 ### `POST /maintenance/assets`
 
@@ -292,7 +292,7 @@ Admin only. Create asset.
 
 ### `PATCH /maintenance/assets/:id/status`
 
-Admin or Marshal. Update asset operational status.
+Admin or mayor. Update asset operational status.
 
 **Request body:**
 ```json
@@ -326,7 +326,7 @@ Tickets are also auto-created from `INFRASTRUCTURE` incidents.
 
 ### `PATCH /maintenance/tickets/:id`
 
-Admin or Marshal. Update ticket fields or status.
+Admin or mayor. Update ticket fields or status.
 
 ---
 
@@ -365,15 +365,15 @@ Admin only. Delete rule.
 
 ### `GET /dashboard/summary`
 
-Admin only. City-wide stats: active incidents, pending, resolved today, online marshals, incidents by type, by severity.
+Admin only. City-wide stats: active incidents, pending, resolved today, online mayors, incidents by type, by severity.
 
 ### `GET /dashboard/incidents/live`
 
 Admin only. Live incident feed with status, zone, and response time info.
 
-### `GET /dashboard/marshals/map`
+### `GET /dashboard/mayors/map`
 
-Admin only. Marshal positions for the map view.
+Admin only. mayor positions for the map view.
 
 ### `GET /dashboard/zones/density`
 
@@ -433,10 +433,10 @@ Connection: Socket.IO at the server URL, auth via `{ token }`.
 | Event | Payload | Recipients | When |
 |---|---|---|---|
 | `incident:created` | `{ id, type, severity, zoneId, status, referenceCode, title, createdAt }` | Admin room + zone room | New incident reported |
-| `incident:updated` | `{ id, status, assignedTo, updatedAt }` | Admin + citizen + zone + assigned marshal | Status change or assignment |
+| `incident:updated` | `{ id, status, assignedTo, updatedAt }` | Admin + citizen + zone + assigned mayor | Status change or assignment |
 | `incident:escalated` | `{ id, previousStatus, escalatedTo, tier }` | Admin (all tiers) + zone/mayor (tier 1) | Escalation timer fires |
-| `marshal:assigned` | Assignment object | Assigned marshal only | Zone assignment created |
-| `marshal:location_updated` | `{ mayorId, zoneId, lat, lng }` | Admin room | Marshal reports GPS |
+| `mayor:assigned` | Assignment object | Assigned mayor only | Zone assignment created |
+| `mayor:location_updated` | `{ mayorId, zoneId, lat, lng }` | Admin room | mayor reports GPS |
 | `zone:alert` | `{ zoneId, message, priority }` | Admin room + zone room | Corridor dispatch |
 
 ### Client → Server

@@ -1,6 +1,6 @@
 # HaloCity — Smart City Operations Platform
 
-A three-role real-time incident management system for a smart city (Redemption City). Citizens report incidents, marshals respond in the field, and command center administrators oversee the entire city.
+A three-role real-time incident management system for a smart city (Redemption City). Citizens report incidents, mayors respond in the field, and command center administrators oversee the entire city.
 
 ---
 
@@ -19,21 +19,21 @@ Three distinct applications sharing a single backend:
 | App | Role | Route prefix |
 |---|---|---|
 | **Citizen App** | Report incidents, track own reports | `/app/*` |
-| **Marshal App** | Respond to zone incidents, update status, GPS location | `/marshal/*` |
-| **Command Center** | Full city overview, zone/marshal/incident management | `/command/*` |
+| **Mayor App** | Respond to zone incidents, update status, GPS location | `/mayor/*` |
+| **Command Center** | Full city overview, zone/mayor/incident management | `/command/*` |
 
 ### Data Flow
 
 ```
 Citizen reports → Backend classifies severity, schedules escalation
-                → WebSocket `incident:created` → Admin + zone marshals see it instantly
+                → WebSocket `incident:created` → Admin + zone mayors see it instantly
                 → Escalation timer starts (BullMQ)
 
-Marshal acknowledges → Cancels escalation, status moves forward
+Mayor acknowledges → Cancels escalation, status moves forward
                     → WebSocket `incident:updated` → Citizen + zone + admin
 
 Escalation fires (no acknowledgement) → Status → ESCALATED
-                                       → Tier 1: Zone marshals notified
+                                       → Tier 1: Zone mayors notified
                                        → Tier 2: Admin notified (backstop)
 ```
 
@@ -42,23 +42,23 @@ Escalation fires (no acknowledgement) → Status → ESCALATED
 | Room | Members | Receives |
 |---|---|---|
 | `admin` | All admins | Every event city-wide |
-| `zone:{zoneId}` | Marshals + citizens in that zone | Zone-scoped incidents and alerts |
-| `mayor:{mayorId}` | One marshal | Personal assignments and instructions |
+| `zone:{zoneId}` | Mayors + citizens in that zone | Zone-scoped incidents and alerts |
+| `mayor:{mayorId}` | One mayor | Personal assignments and instructions |
 | `citizen:{userId}` | One citizen | Own report updates only |
 
 ---
 
 ## Role Hierarchy
 
-| Capability | Admin | Marshal | Citizen |
+| Capability | Admin | Mayor | Citizen |
 |---|---|---|---|
 | View own incidents | ✅ | ✅ | ✅ |
 | View zone-wide incidents | ✅ | ✅ (own zone) | ❌ |
 | View city-wide incidents | ✅ | ❌ | ❌ |
 | Create incident | ✅ | ✅ | ✅ |
 | Progress incident (sequential) | ✅ (any) | ✅ (Ack→InProg→Resolved) | ❌ |
-| Assign marshal to incident | ✅ | ❌ | ❌ |
-| Assign marshal to zone | ✅ | ❌ | ❌ |
+| Assign mayor to incident | ✅ | ❌ | ❌ |
+| Assign mayor to zone | ✅ | ❌ | ❌ |
 | Dispatch corridor alerts | ✅ | ❌ | ❌ |
 | Update GPS location | — | ✅ | — |
 | Zone CRUD | ✅ | ❌ (read own) | ❌ (read for selection) |
@@ -121,7 +121,7 @@ npm run dev
 | Email | `admin@halocity.ng` |
 | Password | `HaloCity@2026` |
 
-Register new Citizen or Marshal accounts from the app.
+Register new Citizen or Mayor accounts from the app.
 
 ---
 
