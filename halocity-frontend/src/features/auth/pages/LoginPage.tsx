@@ -87,6 +87,17 @@ export default function LoginPage() {
           </form>
         </Form>
 
+        <details className="mt-4 rounded-lg border border-border bg-white/50 p-3">
+          <summary className="cursor-pointer text-xs font-medium text-[#64748B] hover:text-[#0F172A]">
+            Demo credentials
+          </summary>
+          <div className="mt-2 space-y-1 text-xs text-[#64748B]">
+            <p><span className="font-medium text-[#0F172A]">Admin:</span> admin@halocity.ng / HaloCity@2026</p>
+            <p><span className="font-medium text-[#0F172A]">Mayor:</span> bola.tinubu@example.com / HaloCity@2026</p>
+            <p><span className="font-medium text-[#0F172A]">Citizen:</span> amaka.okonkwo@example.com / HaloCity@2026</p>
+          </div>
+        </details>
+
         <p className="mt-6 text-center text-sm text-[#64748B]">
           Don't have an account?{' '}
           <Link to="/register" className="font-medium text-primary hover:underline">

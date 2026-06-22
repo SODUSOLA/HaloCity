@@ -42,6 +42,7 @@ export interface Incident {
   type: IncidentType
   severity: IncidentSeverity
   status: IncidentStatus
+  title?: string
   description: string
   locationLat: number
   locationLng: number

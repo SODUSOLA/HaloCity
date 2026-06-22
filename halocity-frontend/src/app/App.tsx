@@ -28,6 +28,7 @@ import CommandMarshals from '@/features/command-center/pages/MarshalsPage'
 import CommandZones from '@/features/command-center/pages/ZonesPage'
 import CommandMaintenance from '@/features/command-center/pages/MaintenancePage'
 import CommandEscalation from '@/features/command-center/pages/EscalationRulesPage'
+import CommandIncidentMap from '@/features/command-center/pages/IncidentMapPage'
 
 export default function App() {
   const { user, token, loading } = useAuth()
@@ -143,6 +144,7 @@ function CommandRoutes() {
     { path: 'zones', element: <CommandZones /> },
     { path: 'maintenance', element: <CommandMaintenance /> },
     { path: 'escalation-rules', element: <CommandEscalation /> },
+    { path: 'map', element: <CommandIncidentMap /> },
   ])
 }
 

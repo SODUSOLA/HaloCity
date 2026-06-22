@@ -115,6 +115,8 @@ export function IncidentDetailSheet({
               <IncidentStatusTimeline
                 currentStatus={incident.status}
                 resolvedAt={incident.resolvedAt}
+                createdAt={incident.createdAt}
+                escalationLogs={(incident as any).escalationLogs}
               />
             </div>
 

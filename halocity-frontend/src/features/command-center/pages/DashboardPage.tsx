@@ -1,4 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import {
   BarChart,
   Bar,
@@ -14,12 +16,35 @@ import {
 import {
   fetchDashboardSummary,
   fetchLiveIncidents,
+  simulateIncident,
+  clearAllIncidents,
+  dispatchCorridor,
+  fetchHourlyAnalytics,
+  fetchZoneHeat,
+  fetchResponseTimes,
 } from '@/features/incidents/api/incidents.api'
 import { fetchZones } from '@/features/incidents/api/incidents.api'
 import { IncidentRow } from '@/features/incidents/components/IncidentRow'
 import { KPISkeleton } from '@/shared/components/LoadingSkeletons'
 import { ErrorState } from '@/shared/components/ErrorState'
 import { isToday } from '@/shared/lib/geo'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 const CHART_COLORS = {
   primary: '#1E40AF',
@@ -30,6 +55,34 @@ const CHART_COLORS = {
 }
 
 export default function DashboardPage() {
+  const queryClient = useQueryClient()
+  const [simulating, setSimulating] = useState(false)
+  const [clearing, setClearing] = useState(false)
+  const [corridorOpen, setCorridorOpen] = useState(false)
+  const [corridorZoneIds, setCorridorZoneIds] = useState<string[]>([])
+  const [corridorMessage, setCorridorMessage] = useState('')
+  const [corridorPriority, setCorridorPriority] = useState('HIGH')
+  const [corridorSending, setCorridorSending] = useState(false)
+  const [showAnalytics, setShowAnalytics] = useState(false)
+
+  const hourly = useQuery({
+    queryKey: ['analytics', 'hourly'],
+    queryFn: fetchHourlyAnalytics,
+    enabled: showAnalytics,
+  })
+
+  const zoneHeat = useQuery({
+    queryKey: ['analytics', 'zone-heat'],
+    queryFn: fetchZoneHeat,
+    enabled: showAnalytics,
+  })
+
+  const responseTimes = useQuery({
+    queryKey: ['analytics', 'response-times'],
+    queryFn: fetchResponseTimes,
+    enabled: showAnalytics,
+  })
+
   const summary = useQuery({
     queryKey: ['dashboard', 'summary'],
     queryFn: fetchDashboardSummary,
@@ -99,6 +152,61 @@ export default function DashboardPage() {
     .filter((i) => i.status !== 'CLOSED')
     .slice(0, 5)
 
+  const handleSimulate = async () => {
+    setSimulating(true)
+    try {
+      const inc = await simulateIncident()
+      toast.success(`Simulated ${inc.type} incident: ${inc.referenceCode}`)
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      queryClient.invalidateQueries({ queryKey: ['incidents'] })
+    } catch {
+      toast.error('Failed to simulate incident')
+    } finally {
+      setSimulating(false)
+    }
+  }
+
+  const handleClearAll = async () => {
+    setClearing(true)
+    try {
+      const res = await clearAllIncidents()
+      toast.success(`Closed ${res.closed} active incidents`)
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      queryClient.invalidateQueries({ queryKey: ['incidents'] })
+    } catch {
+      toast.error('Failed to clear incidents')
+    } finally {
+      setClearing(false)
+    }
+  }
+
+  const handleCorridorSend = async () => {
+    if (!corridorMessage || corridorZoneIds.length === 0) return
+    setCorridorSending(true)
+    try {
+      await dispatchCorridor({
+        zoneIds: corridorZoneIds,
+        message: corridorMessage,
+        priority: corridorPriority,
+      })
+      toast.success('Corridor instruction dispatched')
+      setCorridorOpen(false)
+      setCorridorMessage('')
+      setCorridorZoneIds([])
+      setCorridorPriority('HIGH')
+    } catch {
+      toast.error('Failed to dispatch corridor instruction')
+    } finally {
+      setCorridorSending(false)
+    }
+  }
+
+  const toggleZone = (id: string) => {
+    setCorridorZoneIds((prev) =>
+      prev.includes(id) ? prev.filter((z) => z !== id) : [...prev, id],
+    )
+  }
+
   return (
     <div className="space-y-6 p-6">
       <h1 className="text-xl font-semibold text-[#0F172A]">Command Dashboard</h1>
@@ -128,6 +236,18 @@ export default function DashboardPage() {
             {s?.activeMarshals ?? 0}
           </p>
         </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <Button size="sm" onClick={handleSimulate} disabled={simulating}>
+          {simulating ? 'Simulating...' : 'Simulate Incident'}
+        </Button>
+        <Button size="sm" variant="outline" onClick={handleClearAll} disabled={clearing}>
+          {clearing ? 'Clearing...' : 'Clear All'}
+        </Button>
+        <Button size="sm" variant="outline" onClick={() => setCorridorOpen(true)}>
+          Clear Corridor
+        </Button>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -250,6 +370,192 @@ export default function DashboardPage() {
           <p className="text-sm text-[#94A3B8]">No recent activity</p>
         )}
       </div>
+
+      <div className="rounded-lg border border-border p-4">
+        <button
+          onClick={() => setShowAnalytics((v) => !v)}
+          className="flex w-full items-center justify-between"
+        >
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+            Analytics
+          </h2>
+          <span className="text-xs text-[#64748B]">
+            {showAnalytics ? 'Hide' : 'Show'}
+          </span>
+        </button>
+
+        {showAnalytics && (
+          <div className="mt-4 space-y-6">
+            <div>
+              <h3 className="mb-2 text-xs font-medium text-[#64748B]">
+                Incidents per Hour (24h)
+              </h3>
+              {hourly.isLoading ? (
+                <p className="text-xs text-[#94A3B8]">Loading...</p>
+              ) : hourly.data ? (
+                <ResponsiveContainer width="100%" height={180}>
+                  <BarChart data={hourly.data as { hour: string; count: number }[]}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                    <XAxis
+                      dataKey="hour"
+                      tick={{ fontSize: 9 }}
+                      tickFormatter={(v: string) => v.slice(11, 16)}
+                    />
+                    <YAxis tick={{ fontSize: 10 }} />
+                    <Tooltip />
+                    <Bar dataKey="count" fill={CHART_COLORS.primary} radius={[2, 2, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <p className="text-xs text-[#94A3B8]">No data</p>
+              )}
+            </div>
+
+            <div>
+              <h3 className="mb-2 text-xs font-medium text-[#64748B]">Zone Heat</h3>
+              {zoneHeat.isLoading ? (
+                <p className="text-xs text-[#94A3B8]">Loading...</p>
+              ) : zoneHeat.data ? (
+                <div className="space-y-1">
+                  {(zoneHeat.data as { zoneName: string; heatIndex: number; activeIncidents: number }[])
+                    .slice(0, 8)
+                    .map((z) => (
+                      <div key={z.zoneName} className="flex items-center gap-3">
+                        <span className="w-24 text-xs text-[#64748B] truncate">{z.zoneName}</span>
+                        <div className="flex-1 rounded-full bg-surface-alt h-2">
+                          <div
+                            className="h-2 rounded-full bg-primary transition-all"
+                            style={{
+                              width: `${Math.min(100, z.heatIndex * 10)}%`,
+                            }}
+                          />
+                        </div>
+                        <span className="w-8 text-right text-xs text-[#94A3B8]">
+                          {z.activeIncidents}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              ) : (
+                <p className="text-xs text-[#94A3B8]">No data</p>
+              )}
+            </div>
+
+            <div>
+              <h3 className="mb-2 text-xs font-medium text-[#64748B]">
+                Response Times
+              </h3>
+              {responseTimes.isLoading ? (
+                <p className="text-xs text-[#94A3B8]">Loading...</p>
+              ) : responseTimes.data ? (
+                (() => {
+                  const rt = responseTimes.data as { overall: { avg: number | null; min: number | null; max: number | null } }
+                  return (
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="rounded-md bg-surface-alt p-3 text-center">
+                        <p className="text-lg font-bold text-[#0F172A]">
+                          {rt.overall.avg !== null ? `${rt.overall.avg}m` : '--'}
+                        </p>
+                        <p className="text-xs text-[#64748B]">Average</p>
+                      </div>
+                      <div className="rounded-md bg-surface-alt p-3 text-center">
+                        <p className="text-lg font-bold text-success">
+                          {rt.overall.min !== null ? `${rt.overall.min}m` : '--'}
+                        </p>
+                        <p className="text-xs text-[#64748B]">Fastest</p>
+                      </div>
+                      <div className="rounded-md bg-surface-alt p-3 text-center">
+                        <p className="text-lg font-bold text-warning">
+                          {rt.overall.max !== null ? `${rt.overall.max}m` : '--'}
+                        </p>
+                        <p className="text-xs text-[#64748B]">Slowest</p>
+                      </div>
+                    </div>
+                  )
+                })()
+              ) : (
+                <p className="text-xs text-[#94A3B8]">No resolved incidents yet</p>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <Dialog open={corridorOpen} onOpenChange={setCorridorOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Clear Corridor</DialogTitle>
+            <DialogDescription>
+              Dispatch an alert to selected zones. All mayors and citizens in the zone will be notified.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <label className="mb-1 block text-xs font-medium text-[#64748B]">
+                Target Zones
+              </label>
+              <div className="max-h-32 space-y-1 overflow-y-auto rounded-md border border-border p-2">
+                {zoneData.map((zone: { id: string; name: string; code?: string }) => (
+                  <label
+                    key={zone.id}
+                    className="flex items-center gap-2 rounded px-2 py-1 text-sm hover:bg-surface-alt cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={corridorZoneIds.includes(zone.id)}
+                      onChange={() => toggleZone(zone.id)}
+                      className="rounded border-border"
+                    />
+                    {zone.code || zone.name}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-medium text-[#64748B]">
+                Message
+              </label>
+              <Textarea
+                placeholder="e.g. All mayors report to sector 4..."
+                value={corridorMessage}
+                onChange={(e) => setCorridorMessage(e.target.value)}
+                rows={3}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-medium text-[#64748B]">
+                Priority
+              </label>
+              <Select value={corridorPriority} onValueChange={setCorridorPriority}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="LOW">Low</SelectItem>
+                  <SelectItem value="MEDIUM">Medium</SelectItem>
+                  <SelectItem value="HIGH">High</SelectItem>
+                  <SelectItem value="CRITICAL">Critical</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCorridorOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCorridorSend}
+              disabled={corridorSending || corridorZoneIds.length === 0 || !corridorMessage.trim()}
+            >
+              {corridorSending ? 'Dispatching...' : 'Dispatch'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

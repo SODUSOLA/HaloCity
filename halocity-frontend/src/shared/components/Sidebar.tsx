@@ -4,6 +4,7 @@ import {
   AlertTriangle,
   Users,
   MapPin,
+  Map,
   Wrench,
   GitBranch,
   LogOut,
@@ -16,6 +17,7 @@ const navItems = [
   { to: '/command/incidents', label: 'Incidents', icon: AlertTriangle },
   { to: '/command/marshals', label: 'Mayors', icon: Users },
   { to: '/command/zones', label: 'Zones', icon: MapPin },
+  { to: '/command/map', label: 'Map', icon: Map },
   { to: '/command/maintenance', label: 'Maintenance', icon: Wrench },
   { to: '/command/escalation-rules', label: 'Escalation', icon: GitBranch },
 ]

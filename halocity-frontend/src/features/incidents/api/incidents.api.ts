@@ -92,3 +92,41 @@ export async function deleteEscalationRule(id: string) {
   const { data } = await api.delete(`/escalation/rules/${id}`)
   return data
 }
+
+// Analytics
+export async function fetchHourlyAnalytics() {
+  const { data } = await api.get('/analytics/hourly')
+  return data
+}
+
+export async function fetchZoneHeat() {
+  const { data } = await api.get('/analytics/zone-heat')
+  return data
+}
+
+export async function fetchResponseTimes() {
+  const { data } = await api.get('/analytics/response-times')
+  return data
+}
+
+// Demo / Simulation
+export async function simulateIncident() {
+  const { data } = await api.post('/demo/simulate-incident')
+  return data
+}
+
+export async function clearAllIncidents() {
+  const { data } = await api.post('/demo/clear')
+  return data
+}
+
+// Corridor dispatch
+export async function dispatchCorridor(payload: {
+  zoneIds: string[]
+  message: string
+  priority?: string
+  incidentId?: string
+}) {
+  const { data } = await api.post('/marshals/corridor', payload)
+  return data
+}
