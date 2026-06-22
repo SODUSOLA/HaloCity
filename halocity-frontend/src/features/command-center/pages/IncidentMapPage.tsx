@@ -1,31 +1,11 @@
 import { useState, useMemo } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
-import iconUrl from 'leaflet/dist/images/marker-icon.png'
-import iconShadowUrl from 'leaflet/dist/images/marker-shadow.png'
-import MarkerClusterGroup from 'react-leaflet-cluster'
 import { useQuery } from '@tanstack/react-query'
 import { fetchLiveIncidents } from '@/features/incidents/api/incidents.api'
 import { CardSkeleton } from '@/shared/components/LoadingSkeletons'
 import { ErrorState } from '@/shared/components/ErrorState'
-import { Badge } from '@/shared/components/Badge'
 import type { Incident } from '@/shared/types'
-
-const defaultIcon = L.icon({
-  iconUrl,
-  shadowUrl: iconShadowUrl,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-})
-L.Marker.prototype.options.icon = defaultIcon
-
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: iconUrl,
-  iconUrl,
-  shadowUrl: iconShadowUrl,
-})
 
 function CenterOnIncidents({ incidents }: { incidents: Incident[] }) {
   const map = useMap()
@@ -52,6 +32,32 @@ function SeverityIcon({ severity }: { severity: string }) {
     iconSize: [24, 24],
     iconAnchor: [12, 12],
   })
+}
+
+function IncidentMarkers({ incidents }: { incidents: Incident[] }) {
+  return (
+    <>
+      {incidents.map((inc) => (
+        <Marker
+          key={inc.id}
+          position={[inc.locationLat!, inc.locationLng!]}
+          icon={SeverityIcon({ severity: inc.severity })}
+        >
+          <Popup>
+            <div className="min-w-[180px] space-y-1.5">
+              <p className="text-xs font-mono text-[#64748B]">{inc.referenceCode}</p>
+              <p className="text-sm font-medium text-[#0F172A]">{inc.title || inc.type.replace('_', ' ')}</p>
+              <p className="text-xs text-[#64748B]">{inc.zone?.name || 'Unknown'}</p>
+              <div className="flex gap-1">
+                <span className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] text-red-600">{inc.severity}</span>
+                <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-600">{inc.status.replace('_', ' ')}</span>
+              </div>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </>
+  )
 }
 
 export default function IncidentMapPage() {
@@ -147,34 +153,7 @@ export default function IncidentMapPage() {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <CenterOnIncidents incidents={filtered} />
-            <MarkerClusterGroup>
-              {filtered.map((inc) => (
-                <Marker
-                  key={inc.id}
-                  position={[inc.locationLat!, inc.locationLng!]}
-                  icon={SeverityIcon({ severity: inc.severity })}
-                >
-                  <Popup>
-                    <div className="min-w-[180px] space-y-1.5">
-                      <p className="text-xs font-mono text-[#64748B]">
-                        {inc.referenceCode}
-                      </p>
-                      <p className="text-sm font-medium text-[#0F172A]">
-                        {inc.title}
-                      </p>
-                      <p className="text-xs text-[#64748B]">
-                        {inc.type.replace('_', ' ')} &middot;{' '}
-                        {inc.zone?.name || 'Unknown'}
-                      </p>
-                      <div className="flex gap-1">
-                        <Badge variant="severity" value={inc.severity} />
-                        <Badge variant="status" value={inc.status} />
-                      </div>
-                    </div>
-                  </Popup>
-                </Marker>
-              ))}
-            </MarkerClusterGroup>
+            <IncidentMarkers incidents={filtered} />
           </MapContainer>
         </div>
       ) : (
