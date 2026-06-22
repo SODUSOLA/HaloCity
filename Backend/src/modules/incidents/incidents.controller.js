@@ -26,3 +26,8 @@ export const assign = catchAsync(async (req, res) => {
   const incident = await incidentService.assignIncident(req.params.id, req.body.mayorId);
   return success(res, 'Incident assigned', incident);
 });
+
+export const restore = catchAsync(async (req, res) => {
+  const incident = await incidentService.restoreIncident(req.params.id);
+  return success(res, 'Incident restored', incident);
+});

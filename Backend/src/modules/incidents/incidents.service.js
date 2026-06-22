@@ -170,6 +170,20 @@ export async function updateStatus(id, user, data) {
   return updated;
 }
 
+export async function restoreIncident(id) {
+  const incident = await prisma.incident.findFirst({
+    where: { id, deletedAt: { not: null } },
+  });
+  if (!incident) {
+    throw new NotFoundError('Deleted incident not found');
+  }
+
+  return prisma.incident.update({
+    where: { id },
+    data: { deletedAt: null },
+  });
+}
+
 export async function assignIncident(id, mayorId) {
   const incident = await prisma.incident.findUnique({ where: { id } });
   if (!incident) {

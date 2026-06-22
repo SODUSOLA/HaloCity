@@ -18,6 +18,7 @@ import notificationRoutes from './modules/notifications/notifications.routes.js'
 import uploadRoutes from './modules/upload/upload.routes.js';
 import demoRoutes from './modules/demo/demo.routes.js';
 import analyticsRoutes from './modules/analytics/analytics.routes.js';
+import ussdRoutes from './modules/ussd/ussd.routes.js';
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use('/api/v1/notifications', notificationRoutes);
 app.use('/api/v1/upload', uploadRoutes);
 app.use('/api/v1/demo', demoRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
+app.use('/api/v1/ussd', ussdRoutes);
 
 // Bull Board for queue monitoring
 import { createBullBoard } from '@bull-board/api';

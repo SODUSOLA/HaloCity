@@ -12,5 +12,6 @@ router.get('/', authMiddleware, incidentController.getAll);
 router.get('/:id', authMiddleware, incidentController.getById);
 router.patch('/:id/status', authMiddleware, requireRole('MAYOR', 'ADMIN'), validate(updateStatusSchema), incidentController.updateStatus);
 router.patch('/:id/assign', authMiddleware, requireRole('ADMIN'), validate(assignIncidentSchema), incidentController.assign);
+router.patch('/:id/restore', authMiddleware, requireRole('ADMIN'), incidentController.restore);
 
 export default router;

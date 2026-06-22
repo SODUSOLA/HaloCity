@@ -8,6 +8,7 @@ import {
   Wrench,
   GitBranch,
   LogOut,
+  Eye,
 } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { useAuth } from '@/shared/stores/AuthContext'
@@ -23,7 +24,7 @@ const navItems = [
 ]
 
 export function Sidebar() {
-  const { user, logout } = useAuth()
+  const { user, logout, setViewAs } = useAuth()
   const navigate = useNavigate()
 
   const handleLogout = () => {
@@ -65,6 +66,13 @@ export function Sidebar() {
         <div className="mb-2 px-3 text-xs text-[#94A3B8]">
           {user?.name}
         </div>
+        <button
+          onClick={() => { setViewAs('citizen'); navigate('/app') }}
+          className="mb-1 flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-[#64748B] hover:bg-surface-alt hover:text-[#0F172A]"
+        >
+          <Eye className="h-4 w-4" />
+          View as Citizen
+        </button>
         <button
           onClick={handleLogout}
           className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-[#64748B] hover:bg-surface-alt hover:text-[#0F172A]"

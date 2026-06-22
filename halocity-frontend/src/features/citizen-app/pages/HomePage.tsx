@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { FileText, AlertTriangle, ClipboardList, Plus, Ambulance, CheckCircle2, Clock } from 'lucide-react'
+import { FileText, AlertTriangle, ClipboardList, Plus, Ambulance, CheckCircle2, Clock, ShieldAlert, ShieldCheck, Shield, Activity } from 'lucide-react'
 import { useAuth } from '@/shared/stores/AuthContext'
 import { useIncidents } from '@/features/incidents/hooks/useIncidents'
 import { IncidentRow } from '@/features/incidents/components/IncidentRow'
@@ -7,37 +7,47 @@ import { KPISkeleton } from '@/shared/components/LoadingSkeletons'
 import { getGreeting } from '@/shared/lib/geo'
 import { cn } from '@/shared/lib/utils'
 
-const quickActions = [
-  {
-    label: 'Report Incident',
-    icon: Plus,
-    to: '/app/report',
-    color: 'bg-primary-light text-primary-text border-primary/20',
-  },
-  {
-    label: 'Emergency',
-    icon: Ambulance,
-    to: '/app/report?type=MEDICAL',
-    color: 'bg-critical-light text-critical-text border-critical/20',
-  },
-  {
-    label: 'View Reports',
-    icon: ClipboardList,
-    to: '/app/reports',
-    color: 'bg-surface-alt text-[#64748B] border-border',
-  },
-]
-
 export default function HomePage() {
   const { user } = useAuth()
   const firstName = user?.name?.split(' ')[0] || 'there'
   const { data: incidents, isLoading } = useIncidents()
+
+  const zoneActiveCount = incidents?.filter(
+    (i) => i.zoneId === user?.zoneId && i.status !== 'RESOLVED' && i.status !== 'CLOSED',
+  ).length || 0
 
   const totalReports = incidents?.length || 0
   const pendingCount = incidents?.filter((i) => i.status === 'PENDING').length || 0
   const resolvedCount = incidents?.filter((i) => i.status === 'RESOLVED' || i.status === 'CLOSED').length || 0
 
   const recentReports = incidents?.slice(0, 3) || []
+
+  const safetyBanner = () => {
+    if (!user?.zoneId) return null
+    let icon = ShieldCheck
+    let color = 'text-success bg-success/10 border-success/20'
+    let text = 'Your Zone is Clear'
+    if (zoneActiveCount >= 1 && zoneActiveCount <= 2) {
+      icon = Shield
+      color = 'text-warning bg-warning/10 border-warning/20'
+      text = 'Low Activity in Your Zone'
+    } else if (zoneActiveCount >= 3 && zoneActiveCount <= 5) {
+      icon = Activity
+      color = 'text-orange-500 bg-orange-50 border-orange-200'
+      text = 'Moderate Activity in Your Zone'
+    } else if (zoneActiveCount >= 6) {
+      icon = ShieldAlert
+      color = 'text-critical bg-critical-light border-critical/20'
+      text = 'High Activity — Stay Alert'
+    }
+    const Icon = icon
+    return (
+      <div className={cn('flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium', color)}>
+        <Icon className="h-4 w-4" />
+        {text} ({zoneActiveCount} active)
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6 p-4">
@@ -49,6 +59,8 @@ export default function HomePage() {
           {user?.zone ? `Zone: ${user.zone.name}` : 'Stay informed about your community'}
         </p>
       </section>
+
+      {safetyBanner()}
 
       {isLoading ? (
         <KPISkeleton count={3} />
@@ -78,20 +90,30 @@ export default function HomePage() {
         </section>
       )}
 
-      <section className="grid grid-cols-3 gap-3">
-        {quickActions.map((action) => (
+      <section className="space-y-3">
+        <Link
+          to="/app/report?type=MEDICAL"
+          className="flex w-full items-center justify-center gap-3 rounded-lg border border-critical/20 bg-critical-light p-4 text-sm font-semibold text-critical-text transition-colors hover:opacity-90"
+        >
+          <Ambulance className="h-6 w-6" />
+          EMERGENCY
+        </Link>
+        <div className="grid grid-cols-2 gap-3">
           <Link
-            key={action.label}
-            to={action.to}
-            className={cn(
-              'flex flex-col items-center gap-2 rounded-lg border p-4 text-center text-xs font-medium transition-colors hover:opacity-80',
-              action.color,
-            )}
+            to="/app/report"
+            className="flex flex-col items-center gap-2 rounded-lg border border-primary/20 bg-primary-light p-4 text-center text-xs font-medium text-primary-text transition-colors hover:opacity-80"
           >
-            <action.icon className="h-5 w-5" />
-            {action.label}
+            <Plus className="h-5 w-5" />
+            Report Incident
           </Link>
-        ))}
+          <Link
+            to="/app/reports"
+            className="flex flex-col items-center gap-2 rounded-lg border border-border bg-surface-alt p-4 text-center text-xs font-medium text-[#64748B] transition-colors hover:opacity-80"
+          >
+            <ClipboardList className="h-5 w-5" />
+            View Reports
+          </Link>
+        </div>
       </section>
 
       <section>

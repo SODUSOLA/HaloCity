@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, ArrowRight, Upload } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Upload, Mic, MicOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCreateIncident } from '@/features/incidents/hooks/useIncidents'
 import { createIncidentSchema } from '@/features/incidents/types'
@@ -206,12 +206,17 @@ export default function ReportWizardPage() {
           </div>
           <div>
             <label className="mb-1 block text-xs font-medium text-[#64748B]">Description (optional)</label>
-            <textarea
-              className="min-h-[120px] w-full rounded-lg border border-border p-3 text-sm focus:border-primary focus:outline-none"
-              placeholder="Provide details about what happened"
-              value={watchDescription || ''}
-              onChange={(e) => form.setValue('description', e.target.value || undefined)}
-            />
+            <div className="relative">
+              <textarea
+                className="min-h-[120px] w-full rounded-lg border border-border p-3 pr-10 text-sm focus:border-primary focus:outline-none"
+                placeholder="Provide details about what happened"
+                value={watchDescription || ''}
+                onChange={(e) => form.setValue('description', e.target.value || undefined)}
+              />
+              <VoiceInput
+                onResult={(text) => form.setValue('description', text)}
+              />
+            </div>
           </div>
         </div>
       )}
@@ -341,5 +346,54 @@ export default function ReportWizardPage() {
         )}
       </div>
     </div>
+  )
+}
+
+function VoiceInput({ onResult }: { onResult: (text: string) => void }) {
+  const [listening, setListening] = useState(false)
+  const recognitionRef = useRef<any>(null)
+
+  const SpeechRecognitionCtor = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+  const supported = !!SpeechRecognitionCtor
+
+  if (!supported) return null
+
+  const toggle = () => {
+    if (listening) {
+      recognitionRef.current?.stop()
+      setListening(false)
+      return
+    }
+
+    const recognition: any = new SpeechRecognitionCtor()
+    recognition.continuous = false
+    recognition.lang = 'en-NG'
+    recognition.interimResults = false
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript
+      onResult(transcript)
+      setListening(false)
+    }
+
+    recognition.onerror = () => setListening(false)
+    recognition.onend = () => setListening(false)
+
+    recognitionRef.current = recognition
+    recognition.start()
+    setListening(true)
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      className={`absolute bottom-2 right-2 rounded-full p-1.5 transition-colors ${
+        listening ? 'bg-critical text-white animate-pulse' : 'text-[#94A3B8] hover:text-[#64748B]'
+      }`}
+      aria-label={listening ? 'Stop recording' : 'Start voice input'}
+    >
+      {listening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+    </button>
   )
 }

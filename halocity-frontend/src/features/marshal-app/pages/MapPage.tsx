@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapPin } from 'lucide-react'
 import L from 'leaflet'
 import iconUrl from 'leaflet/dist/images/marker-icon.png'
 import iconShadowUrl from 'leaflet/dist/images/marker-shadow.png'
@@ -69,10 +70,10 @@ export default function MapPage() {
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {withCoords.map((inc: Incident) => (
+                  {withCoords.map((inc: Incident) => (
                   <Marker key={inc.id} position={[inc.locationLat!, inc.locationLng!]}>
                     <Popup>
-                      <div className="min-w-[150px] space-y-1">
+                      <div className="min-w-[180px] space-y-2">
                         <p className="text-xs font-mono text-[#64748B]">{inc.referenceCode}</p>
                         <p className="text-sm font-medium text-[#0F172A]">
                           {inc.type.charAt(0) + inc.type.slice(1).toLowerCase().replace('_', ' ')}
@@ -84,6 +85,15 @@ export default function MapPage() {
                         {inc.description && (
                           <p className="text-xs text-[#64748B] line-clamp-2">{inc.description}</p>
                         )}
+                        <a
+                          href={`https://www.google.com/maps/dir/?api=1&destination=${inc.locationLat},${inc.locationLng}&travelmode=driving`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-1 flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary/90"
+                        >
+                          <MapPin className="h-3 w-3" />
+                          Get Directions
+                        </a>
                       </div>
                     </Popup>
                   </Marker>

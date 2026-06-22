@@ -1,6 +1,7 @@
 import { Navigate, useRoutes } from 'react-router-dom'
 import { useAuth } from '@/shared/stores/AuthContext'
 import { CriticalBanner } from '@/shared/components/CriticalBanner'
+import { OfflineBanner } from '@/shared/components/OfflineBanner'
 import { useSocket } from '@/shared/hooks/useSocket'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { Sidebar } from '@/shared/components/Sidebar'
@@ -31,22 +32,25 @@ import CommandEscalation from '@/features/command-center/pages/EscalationRulesPa
 import CommandIncidentMap from '@/features/command-center/pages/IncidentMapPage'
 
 export default function App() {
-  const { user, token, loading } = useAuth()
+  const { user, token, loading, viewAs } = useAuth()
+
+  const canAccessCitizen = token && (user?.role === 'CITIZEN' || viewAs === 'citizen')
 
   const routing = useRoutes([
     {
       path: '/login',
-      element: token ? <RoleRedirect role={user?.role} /> : <LoginPage />,
+      element: token ? <RoleRedirect role={user?.role} viewAs={viewAs} /> : <LoginPage />,
     },
     {
       path: '/register',
-      element: token ? <RoleRedirect role={user?.role} /> : <RegisterPage />,
+      element: token ? <RoleRedirect role={user?.role} viewAs={viewAs} /> : <RegisterPage />,
     },
     {
       path: '/app/*',
-      element:
-        token && user?.role === 'CITIZEN' ? (
+      element: canAccessCitizen ? (
           <>
+            {viewAs === 'citizen' && <ViewAsBanner />}
+            <OfflineBanner />
             <CriticalBanner />
             <main className="min-h-screen bg-[#F8FAFC] pb-16">
               <CitizenRoutes />
@@ -62,6 +66,7 @@ export default function App() {
       element:
         token && user?.role === 'MAYOR' ? (
           <>
+            <OfflineBanner />
             <CriticalBanner />
             <main className="min-h-screen bg-[#F8FAFC] pb-16">
               <MarshalRoutes />
@@ -148,15 +153,32 @@ function CommandRoutes() {
   ])
 }
 
+function ViewAsBanner() {
+  const { setViewAs } = useAuth()
+  return (
+    <div className="flex items-center justify-between bg-primary px-4 py-2 text-sm text-white">
+      <span>Viewing as Citizen</span>
+      <button
+        onClick={() => setViewAs('primary')}
+        className="rounded bg-white/20 px-3 py-1 text-xs font-medium hover:bg-white/30"
+      >
+        Back to Command
+      </button>
+    </div>
+  )
+}
+
 function RootRedirect() {
-  const { user, token } = useAuth()
+  const { user, token, viewAs } = useAuth()
   if (!token || !user) return <Navigate to="/login" replace />
+  if (viewAs === 'citizen') return <Navigate to="/app" replace />
   if (user.role === 'ADMIN') return <Navigate to="/command" replace />
   if (user.role === 'MAYOR') return <Navigate to="/marshal" replace />
   return <Navigate to="/app" replace />
 }
 
-function RoleRedirect({ role }: { role?: string }) {
+function RoleRedirect({ role, viewAs }: { role?: string; viewAs?: string }) {
+  if (viewAs === 'citizen') return <Navigate to="/app" replace />
   if (role === 'ADMIN') return <Navigate to="/command" replace />
   if (role === 'MAYOR') return <Navigate to="/marshal" replace />
   return <Navigate to="/app" replace />

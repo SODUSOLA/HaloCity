@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, MapPin, Calendar, User, Phone } from 'lucide-react'
+import { ArrowLeft, MapPin, Calendar, User, Phone, Check, ChevronRight } from 'lucide-react'
 import { toast } from 'sonner'
 import { useIncident, useUpdateStatus } from '@/features/incidents/hooks/useIncidents'
 import { Badge } from '@/shared/components/Badge'
@@ -7,21 +7,14 @@ import { CardSkeleton } from '@/shared/components/LoadingSkeletons'
 import { ErrorState } from '@/shared/components/ErrorState'
 import { Button } from '@/components/ui/button'
 import { IncidentStatusTimeline } from '@/features/incidents/components/IncidentStatusTimeline'
+import { cn } from '@/shared/lib/utils'
 
-const ALLOWED_TRANSITIONS: Record<string, string[]> = {
-  PENDING: ['ACKNOWLEDGED'],
-  ACKNOWLEDGED: ['IN_PROGRESS'],
-  IN_PROGRESS: ['RESOLVED'],
-  RESOLVED: [],
-  CLOSED: [],
-  ESCALATED: [],
-}
-
-const transitionLabels: Record<string, string> = {
-  ACKNOWLEDGED: 'Accept Assignment',
-  IN_PROGRESS: 'Mark In Progress',
-  RESOLVED: 'Resolve Incident',
-}
+const STATUS_FLOW = [
+  { status: 'PENDING', label: 'Reported' },
+  { status: 'ACKNOWLEDGED', label: 'Acknowledged' },
+  { status: 'IN_PROGRESS', label: 'In Progress' },
+  { status: 'RESOLVED', label: 'Resolved' },
+]
 
 export default function AssignmentDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -53,7 +46,9 @@ export default function AssignmentDetailPage() {
     )
   }
 
-  const allowed = ALLOWED_TRANSITIONS[incident.status] || []
+  const statusOrder = STATUS_FLOW.map((s) => s.status)
+  const currentIdx = statusOrder.indexOf(incident.status)
+  const nextStatus = currentIdx < statusOrder.length - 1 ? statusOrder[currentIdx + 1] : null
   const googleMapsUrl = incident.locationLat
     ? `https://www.google.com/maps/dir/?api=1&destination=${incident.locationLat},${incident.locationLng}`
     : null
@@ -114,8 +109,9 @@ export default function AssignmentDetailPage() {
               href={googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs font-medium text-primary hover:underline"
+              className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
             >
+              <MapPin className="h-3 w-3" />
               Get directions (Google Maps)
             </a>
           )}
@@ -142,32 +138,70 @@ export default function AssignmentDetailPage() {
 
       <div>
         <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#64748B]">
+          Status Flow
+        </p>
+        <div className="space-y-2">
+          {STATUS_FLOW.map((step, i) => {
+            const isPast = i < currentIdx
+            const isCurrent = i === currentIdx
+            const isFuture = i > currentIdx
+
+            return (
+              <div key={step.status} className="flex items-center gap-3">
+                <div
+                  className={cn(
+                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2',
+                    isPast && 'border-success bg-success text-white',
+                    isCurrent && 'border-primary bg-primary text-white',
+                    isFuture && 'border-border bg-white text-[#94A3B8]',
+                  )}
+                >
+                  {isPast ? <Check className="h-4 w-4" /> : <span className="text-xs font-medium">{i + 1}</span>}
+                </div>
+                <span
+                  className={cn(
+                    'text-sm',
+                    isPast && 'text-success line-through',
+                    isCurrent && 'font-medium text-[#0F172A]',
+                    isFuture && 'text-[#94A3B8]',
+                  )}
+                >
+                  {step.label}
+                </span>
+                {isCurrent && nextStatus && (
+                  <ChevronRight className="h-4 w-4 text-[#94A3B8]" />
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {nextStatus && incident.status !== 'RESOLVED' && incident.status !== 'CLOSED' && (
+        <Button
+          className="w-full"
+          variant={nextStatus === 'RESOLVED' ? 'default' : 'default'}
+          size="lg"
+          onClick={() => handleTransition(nextStatus)}
+          disabled={updateStatus.isPending}
+        >
+          {nextStatus === 'ACKNOWLEDGED' && 'Accept Assignment'}
+          {nextStatus === 'IN_PROGRESS' && 'Mark En Route'}
+          {nextStatus === 'RESOLVED' && 'Resolve Incident'}
+        </Button>
+      )}
+
+      <div>
+        <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#64748B]">
           Status Timeline
         </p>
         <IncidentStatusTimeline
           currentStatus={incident.status}
           resolvedAt={incident.resolvedAt}
+          createdAt={incident.createdAt}
+          escalationLogs={(incident as any).escalationLogs}
         />
       </div>
-
-      {allowed.length > 0 && (
-        <div className="space-y-2">
-          <p className="text-xs font-medium uppercase tracking-wide text-[#64748B]">
-            Actions
-          </p>
-          {allowed.map((s) => (
-            <Button
-              key={s}
-              className="w-full"
-              variant={s === 'RESOLVED' ? 'default' : 'outline'}
-              onClick={() => handleTransition(s)}
-              disabled={updateStatus.isPending}
-            >
-              {transitionLabels[s] || s.replace('_', ' ')}
-            </Button>
-          ))}
-        </div>
-      )}
 
       <div className="rounded-lg border border-border bg-surface-alt p-3 text-xs text-[#64748B]">
         <p className="flex items-center gap-2">
