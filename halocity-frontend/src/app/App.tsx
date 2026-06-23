@@ -157,12 +157,12 @@ function ViewAsBanner() {
   const { setViewAs } = useAuth()
   return (
     <div className="flex items-center justify-between bg-primary px-4 py-2 text-sm text-white">
-      <span>Viewing as Citizen</span>
+      <span>Reporting as Citizen</span>
       <button
         onClick={() => setViewAs('primary')}
         className="rounded bg-white/20 px-3 py-1 text-xs font-medium hover:bg-white/30"
       >
-        Back to Command
+        Back to Dashboard
       </button>
     </div>
   )

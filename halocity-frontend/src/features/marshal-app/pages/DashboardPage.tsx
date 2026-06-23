@@ -1,4 +1,5 @@
-import { ClipboardList } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { ClipboardList, PlusCircle } from 'lucide-react'
 import { useAuth } from '@/shared/stores/AuthContext'
 import { useIncidents } from '@/features/incidents/hooks/useIncidents'
 import { AssignmentCard } from '@/features/marshals/components/AssignmentCard'
@@ -15,7 +16,8 @@ function greet() {
 }
 
 export default function DashboardPage() {
-  const { user } = useAuth()
+  const { user, setViewAs } = useAuth()
+  const navigate = useNavigate()
   const { data: incidents, isLoading } = useIncidents()
 
   const assigned = incidents?.filter(
@@ -43,6 +45,14 @@ export default function DashboardPage() {
         <h1 className="text-lg font-semibold text-[#0F172A]">{greet()}, {user?.name?.split(' ')[0] || 'Mayor'}</h1>
         <p className="text-xs text-[#64748B]">Here's your current status</p>
       </div>
+
+      <button
+        onClick={() => { setViewAs('citizen'); navigate('/app/report') }}
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
+      >
+        <PlusCircle className="h-4 w-4" />
+        Report Incident
+      </button>
 
       <div className="grid grid-cols-3 gap-3">
         <div className="rounded-lg border border-border p-3">
