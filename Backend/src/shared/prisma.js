@@ -2,41 +2,49 @@ import { PrismaClient } from '@prisma/client';
 
 const globalForPrisma = globalThis;
 
-const prisma = globalForPrisma.__prisma || new PrismaClient();
-
 const SOFT_DELETE_MODELS = ['User', 'Zone', 'Incident', 'Asset', 'MaintenanceTicket'];
 
-prisma.$use(async (params, next) => {
-  if (!SOFT_DELETE_MODELS.includes(params.model)) {
-    return next(params);
+function isSoftDeleteModel(model) {
+  return SOFT_DELETE_MODELS.includes(model);
+}
+
+function excludeDeleted(args) {
+  const { includeDeleted, ...rest } = args || {};
+  if (includeDeleted) return rest;
+  const where = { ...(rest.where || {}) };
+  if (!('deletedAt' in where)) {
+    where.deletedAt = null;
   }
+  return { ...rest, where };
+}
 
-  const { includeDeleted, ...restArgs } = params.args || {};
-  const skipFilter = includeDeleted === true;
+function createExtendedClient() {
+  const base = new PrismaClient();
+  return base.$extends({
+    query: {
+      $allModels: {
+        async findUnique({ model, args, query }) {
+          if (!isSoftDeleteModel(model)) return query(args);
+          return query(excludeDeleted(args));
+        },
+        async findFirst({ model, args, query }) {
+          if (!isSoftDeleteModel(model)) return query(args);
+          return query(excludeDeleted(args));
+        },
+        async findMany({ model, args, query }) {
+          if (!isSoftDeleteModel(model)) return query(args);
+          return query(excludeDeleted(args));
+        },
+        async count({ model, args, query }) {
+          if (!isSoftDeleteModel(model)) return query(args);
+          return query(excludeDeleted(args));
+        },
+      },
+    },
+  });
+}
 
-  if (['findUnique', 'findFirst', 'findMany', 'count'].includes(params.action)) {
-    if (!skipFilter) {
-      params.args = {
-        ...restArgs,
-        where: { ...(restArgs.where || {}), deletedAt: null },
-      };
-    } else {
-      params.args = restArgs;
-    }
-  }
-
-  if (params.action === 'delete') {
-    params.action = 'update';
-    params.args = { ...restArgs, data: { deletedAt: new Date(), ...(restArgs.data || {}) } };
-  }
-
-  if (params.action === 'deleteMany') {
-    params.action = 'updateMany';
-    params.args = { ...restArgs, data: { deletedAt: new Date(), ...(restArgs.data || {}) } };
-  }
-
-  return next(params);
-});
+const prisma = globalForPrisma.__prisma || createExtendedClient();
 
 if (process.env.NODE_ENV === 'development') {
   globalForPrisma.__prisma = prisma;
