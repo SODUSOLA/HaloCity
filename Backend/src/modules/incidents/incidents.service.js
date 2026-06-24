@@ -200,7 +200,10 @@ export async function assignIncident(id, mayorId) {
 
   const updated = await prisma.incident.update({
     where: { id },
-    data: { assignedTo: mayorId },
+    data: { 
+      assignedTo: mayorId,
+      ...(incident.status === 'ESCALATED' ? { status: 'ACKNOWLEDGED' } : {}),
+    },
     include: {
       zone: true,
       reporter: { select: { id: true, name: true } },
@@ -209,6 +212,10 @@ export async function assignIncident(id, mayorId) {
   });
 
   emitIncidentUpdated(updated);
+
+  if (incident.status === 'ESCALATED') {
+    cancelEscalation(id).catch(() => {});
+  }
 
   dispatch({
     userId: mayorId,

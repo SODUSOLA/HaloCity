@@ -28,7 +28,7 @@ export default function DashboardPage() {
   })
 
   const assigned = incidents?.filter(
-    (i) => i.status === 'PENDING' || i.status === 'ACKNOWLEDGED',
+    (i) => i.status === 'PENDING' || i.status === 'ACKNOWLEDGED' || i.status === 'ESCALATED',
   )
   const resolvedToday = incidents?.filter(
     (i) => i.status === 'RESOLVED' && isToday(i.resolvedAt || i.updatedAt),
