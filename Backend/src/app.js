@@ -21,6 +21,7 @@ import analyticsRoutes from './modules/analytics/analytics.routes.js';
 import ussdRoutes from './modules/ussd/ussd.routes.js';
 
 const app = express();
+app.set('trust proxy', 1);
 
 app.use(helmet());
 app.use(compression());
