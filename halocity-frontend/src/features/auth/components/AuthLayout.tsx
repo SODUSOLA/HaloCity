@@ -16,7 +16,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             <span className="text-lg font-semibold text-white">HaloCity</span>
           </div>
           <p className="mt-16 max-w-xs text-2xl italic leading-relaxed text-slate-300">
-            &ldquo;Giving residents, marshals, and city leadership
+            &ldquo;Giving residents, mayors, and city leadership
             a shared operational picture — at all times.&rdquo;
           </p>
           <div className="mt-8 flex gap-4 text-xs text-slate-500">

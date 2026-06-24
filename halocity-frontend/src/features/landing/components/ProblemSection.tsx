@@ -1,7 +1,7 @@
 import { Car, AlertTriangle, EyeOff, ParkingSquare } from 'lucide-react'
 
 const painPoints = [
-  { icon: Car, title: 'Vehicle gridlock', desc: 'No communication layer between Christ Marshals during peak programs' },
+  { icon: Car, title: 'Vehicle gridlock', desc: 'No communication layer between Traffic Mayors during peak programs' },
   { icon: AlertTriangle, title: 'Emergencies in gridlock', desc: 'Response vehicles cannot reach scenes in time — lives at risk' },
   { icon: EyeOff, title: 'No command visibility', desc: 'City leadership receives only fragmented WhatsApp updates' },
   { icon: ParkingSquare, title: 'Parking overflow', desc: 'No real-time data, no pre-arrival routing — cascading gridlock' },

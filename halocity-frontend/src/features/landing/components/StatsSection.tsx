@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 const stats = [
   { value: 3000000, suffix: '+', label: 'Pilgrims during peak Holy Ghost Congress programs' },
-  { value: 2, prefix: '< ', suffix: ' min', label: 'Target: incident to marshal acknowledgement' },
+  { value: 2, prefix: '< ', suffix: ' min', label: 'Target: incident to mayor acknowledgement' },
   { value: 10, suffix: '', label: 'City zones digitally mapped and active' },
   { value: 99.9, suffix: '%', label: 'Target command dashboard uptime' },
 ]

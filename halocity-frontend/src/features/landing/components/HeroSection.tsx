@@ -37,8 +37,8 @@ export default function HeroSection() {
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-          HaloCity unifies incident reporting, emergency escalation, and marshal
-          coordination — giving residents, Christ Marshals, and city leadership a
+           HaloCity unifies incident reporting, emergency escalation, and mayor
+           coordination — giving residents, Traffic Mayors, and city leadership a
           shared operational picture during the Holy Ghost Congress and beyond.
         </p>
 

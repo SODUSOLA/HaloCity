@@ -3,8 +3,8 @@ import { Smartphone, Zap, Shield, LayoutDashboard, Wrench, BarChart3 } from 'luc
 const modules = [
   { icon: Smartphone, title: 'Citizen & Visitor Reporting', desc: '30-second incident reporting with auto-zone tagging and media upload', tag: 'React + Cloudinary' },
   { icon: Zap, title: 'Intelligent Escalation Engine', desc: 'BullMQ delayed jobs auto-escalate unacknowledged incidents through tiers', tag: 'BullMQ + Redis' },
-  { icon: Shield, title: 'Marshal Coordination & Routing', desc: 'Live GPS tracking, zone assignments, and corridor alerts for field responders', tag: 'Socket.io + Leaflet' },
-  { icon: LayoutDashboard, title: 'Command Operations Dashboard', desc: 'Real-time city-wide view: incidents, marshals, zones, charts — for city leadership', tag: 'Recharts + Redis' },
+  { icon: Shield, title: 'Mayor Coordination & Routing', desc: 'Live GPS tracking, zone assignments, and corridor alerts for field responders', tag: 'Socket.io + Leaflet' },
+  { icon: LayoutDashboard, title: 'Command Operations Dashboard', desc: 'Real-time city-wide view: incidents, mayors, zones, charts — for city leadership', tag: 'Recharts + Redis' },
   { icon: Wrench, title: 'Infrastructure Maintenance Tracker', desc: 'Auto-generated tickets from infrastructure incidents, tracked to closure', tag: 'Prisma + PostgreSQL' },
 ]
 

@@ -76,8 +76,7 @@ export default function RegisterPage() {
                     : 'border-slate-200 bg-white hover:border-primary/50',
                 )}
               >
-                <span className="text-lg">👤</span>
-                <span className="font-medium text-slate-900">Citizen</span>
+                <span className="text-sm font-medium text-slate-900">Citizen</span>
                 <span className="text-[11px] text-slate-500">Report incidents and track status</span>
               </button>
               <button
@@ -90,8 +89,7 @@ export default function RegisterPage() {
                     : 'border-slate-200 bg-white hover:border-primary/50',
                 )}
               >
-                <span className="text-lg">🛡️</span>
-                <span className="font-medium text-slate-900">Marshal</span>
+                <span className="text-sm font-medium text-slate-900">Mayor</span>
                 <span className="text-[11px] text-slate-500">Respond to incidents in your zone</span>
               </button>
             </div>

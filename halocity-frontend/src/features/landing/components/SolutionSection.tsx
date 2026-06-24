@@ -8,7 +8,7 @@ const beforeItems = [
 ]
 
 const afterItems = [
-  'Live GPS-tracked marshal coordination',
+  'Live GPS-tracked mayor coordination',
   'Real-time command dashboard, city-wide',
   'Auto-escalation if no one acknowledges in time',
   'Every report tracked from report to resolution',
@@ -26,7 +26,7 @@ export default function SolutionSection() {
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-slate-600">
           HaloCity is a real-time smart city operations platform built for Redemption City.
-          It unifies incident reporting, automatic escalation, and marshal coordination —
+           It unifies incident reporting, automatic escalation, and mayor coordination —
           so every incident from a broken gate to a medical emergency is tracked from
           report to resolution.
         </p>

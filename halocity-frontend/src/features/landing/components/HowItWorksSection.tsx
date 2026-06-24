@@ -3,7 +3,7 @@ import { Smartphone, Tag, UserCheck, Clock, CheckCircle } from 'lucide-react'
 const steps = [
   { icon: Smartphone, title: 'Citizen Reports', desc: 'Any visitor or resident reports Medical, Security, Traffic, or Infrastructure in under 30 seconds' },
   { icon: Tag, title: 'Auto-Classified', desc: 'Backend auto-tags severity and zone from keywords — no manual triage needed' },
-  { icon: UserCheck, title: 'Marshal Notified', desc: 'The nearest available marshal receives a live alert via WebSocket and SMS simultaneously' },
+  { icon: UserCheck, title: 'Mayor Notified', desc: 'The nearest available mayor receives a live alert via WebSocket and SMS simultaneously' },
   { icon: Clock, title: 'Acknowledge or Escalate', desc: 'If no acknowledgement within the configured window, the system auto-escalates to city leadership' },
   { icon: CheckCircle, title: 'Resolved, Tracked', desc: 'Every status change is logged. Citizen sees live updates. Admin sees the full audit trail' },
 ]

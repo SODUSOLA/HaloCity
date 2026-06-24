@@ -53,7 +53,7 @@ export default function LandingFooter() {
                 <Link to="/register" className="text-xs text-slate-400 transition-colors hover:text-white">Register as Citizen</Link>
               </li>
               <li>
-                <Link to="/register" className="text-xs text-slate-400 transition-colors hover:text-white">Register as Marshal</Link>
+                <Link to="/register" className="text-xs text-slate-400 transition-colors hover:text-white">Register as Mayor</Link>
               </li>
             </ul>
           </div>
