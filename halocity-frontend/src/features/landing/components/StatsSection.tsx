@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 const stats = [
-  { value: 500000, suffix: '+', label: 'Annual attendees during peak programs' },
+  { value: 3000000, suffix: '+', label: 'Pilgrims during peak Holy Ghost Congress programs' },
   { value: 2, prefix: '< ', suffix: ' min', label: 'Target: incident to marshal acknowledgement' },
   { value: 10, suffix: '', label: 'City zones digitally mapped and active' },
   { value: 99.9, suffix: '%', label: 'Target command dashboard uptime' },
@@ -20,13 +20,14 @@ function Counter({ end, prefix, suffix }: { end: number; prefix?: string; suffix
       ([entry]) => {
         if (!entry || !entry.isIntersecting || started.current) return
         started.current = true
-        const duration = 1500
+        const duration = end >= 1000000 ? 2000 : 1500
         const startTime = performance.now()
 
         const animate = (now: number) => {
           const elapsed = now - startTime
           const progress = Math.min(elapsed / duration, 1)
-          setCount(Math.floor(progress * end))
+          const current = Math.floor(progress * end)
+          setCount(end >= 1000000 ? Math.round(current / 100000) * 100000 : current)
           if (progress < 1) requestAnimationFrame(animate)
         }
 
@@ -39,7 +40,13 @@ function Counter({ end, prefix, suffix }: { end: number; prefix?: string; suffix
     return () => observer.disconnect()
   }, [end])
 
-  const display = end >= 1000 ? count.toLocaleString() : count
+  const display = (() => {
+    if (end >= 1000000) {
+      const millions = count / 1000000
+      return millions >= 1 ? `${millions.toFixed(millions % 1 === 0 ? 0 : 1)}M` : count.toLocaleString()
+    }
+    return end >= 1000 ? count.toLocaleString() : count
+  })()
 
   return (
     <span ref={ref} className="text-5xl font-bold text-white md:text-6xl">

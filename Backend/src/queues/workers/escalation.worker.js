@@ -14,6 +14,41 @@ const connection = {
   password: url.password || undefined,
 };
 
+async function deriveZoneId(incident) {
+  if (incident.zoneId) return incident.zoneId;
+
+  const textToMatch = [incident.title, incident.description].filter(Boolean).join(' ').toLowerCase();
+  if (!textToMatch) return null;
+
+  const zones = await prisma.zone.findMany({ where: { isActive: true } });
+  for (const zone of zones) {
+    const keywords = [zone.name, zone.code, zone.name.replace(/_/g, ' '), zone.code.replace(/_/g, ' ')];
+    if (keywords.some((k) => textToMatch.includes(k.toLowerCase()))) {
+      logger.info('Derived zone from incident description', { incidentId: incident.id, zoneId: zone.id, zoneName: zone.name });
+      await prisma.incident.update({ where: { id: incident.id }, data: { zoneId: zone.id } }).catch(() => {});
+      return zone.id;
+    }
+  }
+
+  if (incident.locationLat && incident.locationLng) {
+    for (const zone of zones) {
+      const coords = zone.coordinates;
+      if (coords && typeof coords === 'object' && 'lat' in coords && 'lng' in coords) {
+        const d = Math.sqrt(
+          ((coords.lat - incident.locationLat) ** 2) + ((coords.lng - incident.locationLng) ** 2)
+        );
+        if (d < 0.02) {
+          logger.info('Derived zone from reporter location', { incidentId: incident.id, zoneId: zone.id });
+          await prisma.incident.update({ where: { id: incident.id }, data: { zoneId: zone.id } }).catch(() => {});
+          return zone.id;
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
 async function processEscalation(job) {
   const { incidentId, tier, ruleId } = job.data;
 
@@ -37,9 +72,11 @@ async function processEscalation(job) {
     return;
   }
 
+  const zoneId = await deriveZoneId(incident);
+
   const updated = await prisma.incident.update({
     where: { id: incidentId },
-    data: { status: 'ESCALATED' },
+    data: { status: 'ESCALATED', ...(zoneId && zoneId !== incident.zoneId ? { zoneId } : {}) },
     include: {
       zone: true,
       reporter: { select: { id: true, name: true } },
@@ -62,13 +99,16 @@ async function processEscalation(job) {
   let targetUsers = [];
 
   if (tier === 1) {
-    targetUsers = await prisma.user.findMany({
-      where: {
-        role: 'MAYOR',
-        zoneId: incident.zoneId,
-        isActive: true,
-      },
-    });
+    if (zoneId) {
+      targetUsers = await prisma.user.findMany({
+        where: { role: 'MAYOR', zoneId, isActive: true },
+      });
+    }
+    if (!targetUsers.length) {
+      targetUsers = await prisma.user.findMany({
+        where: { role: 'MAYOR', isActive: true },
+      });
+    }
   } else if (tier === 2) {
     targetUsers = await prisma.user.findMany({
       where: { role: 'ADMIN', isActive: true },
@@ -82,7 +122,7 @@ async function processEscalation(job) {
         type: 'ESCALATION',
         channel: 'SMS',
         title: 'Incident Escalated',
-        body: `[HaloCity] Incident ${incident.referenceCode} (${incident.type}) escalated to Tier ${tier}. Zone: ${incident.zone?.name || 'Unknown'}. Please respond immediately.`,
+        body: `[HaloCity] Incident ${updated.referenceCode} (${updated.type}) escalated to Tier ${tier}. Zone: ${updated.zone?.name || 'Unknown'}. Please respond immediately.`,
         referenceId: incidentId,
         referenceType: 'incident',
       });

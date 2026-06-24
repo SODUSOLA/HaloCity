@@ -243,12 +243,13 @@ export async function dispatchCorridor(adminId, data) {
     }
 
     // Notify citizens in the zone
-    const citizenIds = await prisma.incident.findMany({
-      where: { zoneId, reporterId: { not: null } },
+    const citizenRows = await prisma.incident.findMany({
+      where: { zoneId },
       select: { reporterId: true },
       distinct: ['reporterId'],
     });
-    for (const { reporterId } of citizenIds) {
+    const citizenIds = citizenRows.filter((r) => r.reporterId).map((r) => r.reporterId);
+    for (const reporterId of citizenIds) {
       getIO().to(`citizen:${reporterId}`).emit('zone:alert', { zoneId, message: data.message, priority: data.priority });
       dispatch({
         userId: reporterId,

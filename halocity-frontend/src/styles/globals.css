@@ -70,7 +70,7 @@ html {
   }
 
   body {
-    @apply bg-[#F8FAFC] text-[#0F172A] antialiased;
+    @apply bg-background text-foreground antialiased;
     font-family: 'Inter', -apple-system, sans-serif;
   }
 }

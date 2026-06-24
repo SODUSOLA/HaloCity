@@ -71,8 +71,8 @@ const config: Config = {
           text: '#991B1B',
         },
         surface: {
-          DEFAULT: '#FFFFFF',
-          alt: '#F1F5F9',
+          DEFAULT: 'hsl(var(--card))',
+          alt: 'hsl(var(--muted))',
         },
       },
       fontFamily: {

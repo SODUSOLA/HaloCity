@@ -20,9 +20,9 @@ export default function ProblemSection() {
 
         <div className="mt-12 grid gap-8 lg:grid-cols-2">
           <div>
-            <p className="text-7xl font-bold text-critical sm:text-8xl">500,000+</p>
+            <p className="text-7xl font-bold text-critical sm:text-8xl">3 million+</p>
             <p className="mt-2 max-w-xs text-sm text-slate-600">
-              attendees during the Holy Ghost Congress — coordinated today via walkie-talkies and WhatsApp groups
+              pilgrims during the Holy Ghost Congress — coordinated today via walkie-talkies and WhatsApp groups
             </p>
           </div>
 

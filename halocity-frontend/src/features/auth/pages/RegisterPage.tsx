@@ -5,9 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import { useAuth } from '@/shared/stores/AuthContext'
 import { registerSchema } from '@/features/auth/schemas'
-import type { z } from 'zod'
-
-type RegisterFormData = z.infer<typeof registerSchema>
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -19,7 +16,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { cn } from '@/shared/lib/utils'
+import type { z } from 'zod'
 import AuthLayout from '../components/AuthLayout'
+
+type RegisterFormData = z.infer<typeof registerSchema>
 
 export default function RegisterPage() {
   const { register } = useAuth()

@@ -15,10 +15,11 @@ interface AssignmentCardProps {
   className?: string
 }
 
-const STATUS_BUTTONS: Record<string, { label: string; variant: 'default' | 'outline'; nextStatus: string }> = {
+const STATUS_BUTTONS: Record<string, { label: string; variant: 'default' | 'outline' | 'destructive'; nextStatus: string }> = {
   PENDING: { label: 'Accept Assignment', variant: 'default', nextStatus: 'ACKNOWLEDGED' },
   ACKNOWLEDGED: { label: 'Mark En Route', variant: 'outline', nextStatus: 'IN_PROGRESS' },
   IN_PROGRESS: { label: 'Mark Resolved', variant: 'default', nextStatus: 'RESOLVED' },
+  ESCALATED: { label: 'Acknowledge & Respond', variant: 'destructive', nextStatus: 'ACKNOWLEDGED' },
 }
 
 export function AssignmentCard({
@@ -68,17 +69,17 @@ export function AssignmentCard({
       )}
     >
       <div className="mb-2 flex items-center gap-2">
-        <span className="font-mono text-xs text-[#94A3B8]">{incident.referenceCode}</span>
+        <span className="font-mono text-xs text-muted-foreground">{incident.referenceCode}</span>
         <Badge variant="severity" value={incident.severity} />
         <Badge variant="status" value={incident.status} />
       </div>
-      <p className="mb-1 text-sm font-medium text-[#0F172A]">
+      <p className="mb-1 text-sm font-medium text-foreground">
         {incident.type.charAt(0) + incident.type.slice(1).toLowerCase().replace('_', ' ')}
       </p>
       {incident.description && (
-        <p className="mb-2 line-clamp-2 text-xs text-[#64748B]">{incident.description}</p>
+        <p className="mb-2 line-clamp-2 text-xs text-muted-foreground">{incident.description}</p>
       )}
-      <div className="mb-3 flex items-center gap-3 text-xs text-[#94A3B8]">
+      <div className="mb-3 flex items-center gap-3 text-xs text-muted-foreground">
         <span className="flex items-center gap-1">
           <Clock className="h-3 w-3" />
           {new Date(incident.createdAt).toLocaleString()}

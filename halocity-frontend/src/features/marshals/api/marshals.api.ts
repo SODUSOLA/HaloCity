@@ -25,7 +25,26 @@ export async function assignMarshalToZone(mayorId: string, zoneId: string) {
   return data
 }
 
+interface MarshalAssignment {
+  id: string
+  status: string
+  zone: {
+    id: string
+    name: string
+    code: string
+    capacity: number
+  } | null
+  instructions?: string
+  startTime: string
+  endTime?: string
+}
+
 export async function endMarshalAssignment(assignmentId: string) {
   const { data } = await api.patch(`/marshals/${assignmentId}/end`)
+  return data
+}
+
+export async function fetchMyAssignment(): Promise<MarshalAssignment | null> {
+  const { data } = await api.get('/marshals/me')
   return data
 }

@@ -59,7 +59,7 @@ export default function App() {
             <OfflineBanner />
             <CriticalBanner />
             <OnboardingTour role="CITIZEN" />
-            <main className="min-h-screen bg-[#F8FAFC] pb-16">
+            <main className="min-h-screen bg-background pb-16">
               <CitizenRoutes />
             </main>
             <BottomNav role="CITIZEN" />
@@ -76,7 +76,7 @@ export default function App() {
             <OfflineBanner />
             <CriticalBanner />
             <OnboardingTour role="MAYOR" />
-            <main className="min-h-screen bg-[#F8FAFC] pb-16">
+            <main className="min-h-screen bg-background pb-16">
               <MarshalRoutes />
             </main>
             <BottomNav role="MAYOR" />
@@ -91,7 +91,7 @@ export default function App() {
         token && user?.role === 'ADMIN' ? (
           <div className="flex h-screen">
             <Sidebar />
-            <main className="flex-1 overflow-y-auto bg-[#F8FAFC]">
+            <main className="flex-1 overflow-y-auto bg-background">
               <CriticalBanner />
               <CommandRoutes />
             </main>
@@ -141,6 +141,7 @@ function CitizenRoutes() {
 function MarshalRoutes() {
   return useRoutes([
     { index: true, element: <MarshalDashboard /> },
+    { path: 'report', element: <ReportWizardPage /> },
     { path: 'assignments', element: <AssignmentsPage /> },
     { path: 'assignments/:id', element: <AssignmentDetailPage /> },
     { path: 'map', element: <MarshalMap /> },
