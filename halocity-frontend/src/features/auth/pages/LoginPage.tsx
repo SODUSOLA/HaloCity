@@ -87,7 +87,7 @@ export default function LoginPage() {
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={pending}>
+          <Button type="submit" className="w-full font-semibold" disabled={pending}>
             {pending ? 'Signing in...' : 'Sign in'}
           </Button>
         </form>

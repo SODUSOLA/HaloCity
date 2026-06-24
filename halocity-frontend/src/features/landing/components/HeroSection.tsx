@@ -24,7 +24,7 @@ export default function HeroSection() {
         visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
       }`}>
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm text-blue-300">
-          <span>🏙️</span>
+          <span></span>
           <span>KingdomHack — Redemption City Smart City Challenge · Track 0D</span>
         </div>
 
@@ -51,7 +51,7 @@ export default function HeroSection() {
           <Link to="/login">
             <Button
               variant="outline"
-              className="h-auto border-white px-8 py-4 text-base font-semibold text-white hover:bg-white/10"
+              className="h-auto border-white bg-transparent px-8 py-4 text-base font-semibold text-white hover:bg-white/10"
             >
               Sign In
             </Button>
