@@ -26,7 +26,7 @@ export default function AssignmentsPage() {
 
   return (
     <div className="p-4">
-      <h1 className="mb-4 text-lg font-semibold text-[#0F172A]">Assignments</h1>
+      <h1 className="mb-4 text-lg font-semibold text-foreground">Assignments</h1>
 
       <div className="mb-4 flex gap-1 rounded-lg bg-surface-alt p-1">
         {tabs.map((tab) => (
@@ -36,8 +36,8 @@ export default function AssignmentsPage() {
             className={cn(
               'flex-1 rounded-md px-3 py-2 text-xs font-medium transition-colors',
               activeTab === tab.key
-                ? 'bg-white text-[#0F172A] shadow-sm'
-                : 'text-[#64748B] hover:text-[#0F172A]',
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground',
             )}
           >
             {tab.label}

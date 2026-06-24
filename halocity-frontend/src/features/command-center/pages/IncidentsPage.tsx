@@ -20,13 +20,13 @@ const columns = [
   columnHelper.accessor('referenceCode', {
     header: 'ID',
     cell: (info) => (
-      <span className="font-mono text-xs text-[#64748B]">{info.getValue()}</span>
+      <span className="font-mono text-xs text-muted-foreground">{info.getValue()}</span>
     ),
   }),
   columnHelper.accessor('type', {
     header: 'Type',
     cell: (info) => (
-      <span className="text-sm text-[#0F172A]">
+      <span className="text-sm text-foreground">
         {info.getValue().charAt(0) + info.getValue().slice(1).toLowerCase().replace('_', ' ')}
       </span>
     ),
@@ -42,7 +42,7 @@ const columns = [
   columnHelper.accessor('createdAt', {
     header: 'Created',
     cell: (info) => (
-      <span className="text-xs text-[#64748B]">
+      <span className="text-xs text-muted-foreground">
         {new Date(info.getValue()).toLocaleDateString()}
       </span>
     ),
@@ -66,7 +66,7 @@ export default function IncidentsPage() {
   if (isLoading) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Incidents</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Incidents</h1>
         <TableSkeleton />
       </div>
     )
@@ -75,7 +75,7 @@ export default function IncidentsPage() {
   if (isError) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Incidents</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Incidents</h1>
         <ErrorState onRetry={() => refetch()} />
       </div>
     )
@@ -83,7 +83,7 @@ export default function IncidentsPage() {
 
   return (
     <div className="p-6">
-      <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Incidents</h1>
+      <h1 className="mb-6 text-xl font-semibold text-foreground">Incidents</h1>
 
       <div className="overflow-x-auto rounded-lg border border-border">
         <table className="w-full">
@@ -93,7 +93,7 @@ export default function IncidentsPage() {
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-[#64748B]"
+                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground"
                     onClick={header.column.getToggleSortingHandler()}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -121,7 +121,7 @@ export default function IncidentsPage() {
       </div>
 
       {incidents?.length === 0 && (
-        <div className="mt-6 text-center text-sm text-[#64748B]">No incidents found</div>
+        <div className="mt-6 text-center text-sm text-muted-foreground">No incidents found</div>
       )}
 
       {selectedId && (

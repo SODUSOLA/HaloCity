@@ -103,7 +103,7 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Command Dashboard</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Command Dashboard</h1>
         <KPISkeleton />
       </div>
     )
@@ -112,7 +112,7 @@ export default function DashboardPage() {
   if (summary.isError) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Command Dashboard</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Command Dashboard</h1>
         <ErrorState onRetry={() => summary.refetch()} />
       </div>
     )
@@ -209,29 +209,29 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 p-6">
-      <h1 className="text-xl font-semibold text-[#0F172A]">Command Dashboard</h1>
+      <h1 className="text-xl font-semibold text-foreground">Command Dashboard</h1>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div className="rounded-lg border border-border p-4">
-          <p className="text-xs text-[#64748B]">Active Incidents</p>
-          <p className="mt-1 text-3xl font-bold text-[#0F172A]">
+          <p className="text-xs text-muted-foreground">Active Incidents</p>
+          <p className="mt-1 text-3xl font-bold text-foreground">
             {s?.totalActiveIncidents ?? 0}
           </p>
         </div>
         <div className="rounded-lg border border-border p-4">
-          <p className="text-xs text-[#64748B]">Pending</p>
+          <p className="text-xs text-muted-foreground">Pending</p>
           <p className="mt-1 text-3xl font-bold text-warning">
             {liveIncidents.filter((i) => i.status === 'PENDING').length}
           </p>
         </div>
         <div className="rounded-lg border border-border p-4">
-          <p className="text-xs text-[#64748B]">Resolved Today</p>
+          <p className="text-xs text-muted-foreground">Resolved Today</p>
           <p className="mt-1 text-3xl font-bold text-success">
             {resolvedToday}
           </p>
         </div>
         <div className="rounded-lg border border-border p-4">
-          <p className="text-xs text-[#64748B]">Online Mayors</p>
+          <p className="text-xs text-muted-foreground">Online Mayors</p>
           <p className="mt-1 text-3xl font-bold text-primary">
             {s?.activeMarshals ?? 0}
           </p>
@@ -252,7 +252,7 @@ export default function DashboardPage() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-lg border border-border p-4">
-          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             By Type
           </h2>
           {byType.length > 0 ? (
@@ -266,12 +266,12 @@ export default function DashboardPage() {
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-sm text-[#94A3B8]">No data</p>
+            <p className="text-sm text-muted-foreground/60">No data</p>
           )}
         </div>
 
         <div className="rounded-lg border border-border p-4">
-          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             By Severity
           </h2>
           {bySeverity.length > 0 ? (
@@ -293,14 +293,14 @@ export default function DashboardPage() {
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-sm text-[#94A3B8]">No data</p>
+            <p className="text-sm text-muted-foreground/60">No data</p>
           )}
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-lg border border-border p-4">
-          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             By Status
           </h2>
           {byStatus.length > 0 ? (
@@ -328,12 +328,12 @@ export default function DashboardPage() {
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-sm text-[#94A3B8]">No data</p>
+            <p className="text-sm text-muted-foreground/60">No data</p>
           )}
         </div>
 
         <div className="rounded-lg border border-border p-4">
-          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Zone Overview
           </h2>
           <div className="space-y-2">
@@ -343,21 +343,21 @@ export default function DashboardPage() {
                   key={zone.id}
                   className="flex items-center justify-between rounded-md bg-surface-alt px-3 py-2"
                 >
-                  <span className="font-mono text-xs text-[#64748B]">
+                  <span className="font-mono text-xs text-muted-foreground">
                     {zone.code || zone.name}
                   </span>
-                  <span className="text-xs text-[#94A3B8]">{zone.name}</span>
+                  <span className="text-xs text-muted-foreground/60">{zone.name}</span>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-[#94A3B8]">No zones loaded</p>
+              <p className="text-sm text-muted-foreground/60">No zones loaded</p>
             )}
           </div>
         </div>
       </div>
 
       <div className="rounded-lg border border-border p-4">
-        <h2 className="mb-4 text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+        <h2 className="mb-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           City Activity
         </h2>
         {activityItems.length > 0 ? (
@@ -367,7 +367,7 @@ export default function DashboardPage() {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-[#94A3B8]">No recent activity</p>
+          <p className="text-sm text-muted-foreground/60">No recent activity</p>
         )}
       </div>
 
@@ -376,10 +376,10 @@ export default function DashboardPage() {
           onClick={() => setShowAnalytics((v) => !v)}
           className="flex w-full items-center justify-between"
         >
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Analytics
           </h2>
-          <span className="text-xs text-[#64748B]">
+          <span className="text-xs text-muted-foreground">
             {showAnalytics ? 'Hide' : 'Show'}
           </span>
         </button>
@@ -387,7 +387,7 @@ export default function DashboardPage() {
         {showAnalytics && (
           <div className="mt-4 space-y-6">
             <div>
-              <h3 className="mb-2 text-xs font-medium text-[#64748B]">
+              <h3 className="mb-2 text-xs font-medium text-muted-foreground">
                 Incidents per Hour (24h)
               </h3>
               {hourly.isLoading ? (
@@ -407,12 +407,12 @@ export default function DashboardPage() {
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <p className="text-xs text-[#94A3B8]">No data</p>
+                <p className="text-xs text-muted-foreground/60">No data</p>
               )}
             </div>
 
             <div>
-              <h3 className="mb-2 text-xs font-medium text-[#64748B]">Zone Heat</h3>
+              <h3 className="mb-2 text-xs font-medium text-muted-foreground">Zone Heat</h3>
               {zoneHeat.isLoading ? (
                 <CardSkeleton />
               ) : zoneHeat.data ? (
@@ -421,7 +421,7 @@ export default function DashboardPage() {
                     .slice(0, 8)
                     .map((z) => (
                       <div key={z.zoneName} className="flex items-center gap-3">
-                        <span className="w-24 text-xs text-[#64748B] truncate">{z.zoneName}</span>
+                        <span className="w-24 text-xs text-muted-foreground truncate">{z.zoneName}</span>
                         <div className="flex-1 rounded-full bg-surface-alt h-2">
                           <div
                             className="h-2 rounded-full bg-primary transition-all"
@@ -430,19 +430,19 @@ export default function DashboardPage() {
                             }}
                           />
                         </div>
-                        <span className="w-8 text-right text-xs text-[#94A3B8]">
+                        <span className="w-8 text-right text-xs text-muted-foreground/60">
                           {z.activeIncidents}
                         </span>
                       </div>
                     ))}
                 </div>
               ) : (
-                <p className="text-xs text-[#94A3B8]">No data</p>
+                <p className="text-xs text-muted-foreground/60">No data</p>
               )}
             </div>
 
             <div>
-              <h3 className="mb-2 text-xs font-medium text-[#64748B]">
+              <h3 className="mb-2 text-xs font-medium text-muted-foreground">
                 Response Times
               </h3>
               {responseTimes.isLoading ? (
@@ -453,28 +453,28 @@ export default function DashboardPage() {
                   return (
                     <div className="grid grid-cols-3 gap-3">
                       <div className="rounded-md bg-surface-alt p-3 text-center">
-                        <p className="text-lg font-bold text-[#0F172A]">
+                        <p className="text-lg font-bold text-foreground">
                           {rt.overall.avg !== null ? `${rt.overall.avg}m` : '--'}
                         </p>
-                        <p className="text-xs text-[#64748B]">Average</p>
+                        <p className="text-xs text-muted-foreground">Average</p>
                       </div>
                       <div className="rounded-md bg-surface-alt p-3 text-center">
                         <p className="text-lg font-bold text-success">
                           {rt.overall.min !== null ? `${rt.overall.min}m` : '--'}
                         </p>
-                        <p className="text-xs text-[#64748B]">Fastest</p>
+                        <p className="text-xs text-muted-foreground">Fastest</p>
                       </div>
                       <div className="rounded-md bg-surface-alt p-3 text-center">
                         <p className="text-lg font-bold text-warning">
                           {rt.overall.max !== null ? `${rt.overall.max}m` : '--'}
                         </p>
-                        <p className="text-xs text-[#64748B]">Slowest</p>
+                        <p className="text-xs text-muted-foreground">Slowest</p>
                       </div>
                     </div>
                   )
                 })()
               ) : (
-                <p className="text-xs text-[#94A3B8]">No resolved incidents yet</p>
+                <p className="text-xs text-muted-foreground/60">No resolved incidents yet</p>
               )}
             </div>
           </div>
@@ -492,7 +492,7 @@ export default function DashboardPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="mb-1 block text-xs font-medium text-[#64748B]">
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">
                 Target Zones
               </label>
               <div className="max-h-32 space-y-1 overflow-y-auto rounded-md border border-border p-2">
@@ -514,7 +514,7 @@ export default function DashboardPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-medium text-[#64748B]">
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">
                 Message
               </label>
               <Textarea
@@ -526,7 +526,7 @@ export default function DashboardPage() {
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-medium text-[#64748B]">
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">
                 Priority
               </label>
               <Select value={corridorPriority} onValueChange={setCorridorPriority}>

@@ -33,12 +33,12 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="flex h-full w-64 flex-col border-r border-border bg-white">
+    <aside className="flex h-full w-64 flex-col border-r border-border bg-card">
       <div className="flex h-14 items-center gap-2 border-b border-border px-4">
         <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-xs font-bold text-white">
           HC
         </div>
-        <span className="text-sm font-semibold text-[#0F172A]">HaloCity</span>
+        <span className="text-sm font-semibold text-foreground">HaloCity</span>
       </div>
 
       <nav className="flex-1 space-y-1 p-2">
@@ -53,7 +53,7 @@ export function Sidebar() {
                 'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
                 isActive
                   ? 'bg-primary-light text-primary-text'
-                  : 'text-[#64748B] hover:bg-surface-alt hover:text-[#0F172A]',
+                  : 'text-muted-foreground hover:bg-surface-alt hover:text-foreground',
               )
             }
           >
@@ -64,13 +64,13 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t border-border p-2">
-        <div className="mb-2 px-3 text-xs text-[#94A3B8]">
+        <div className="mb-2 px-3 text-xs text-muted-foreground/60">
           {user?.name}
         </div>
         <ThemeToggle className="mb-1 w-full" />
         <button
           onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-[#64748B] hover:bg-surface-alt hover:text-[#0F172A]"
+          className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-surface-alt hover:text-foreground"
         >
           <LogOut className="h-4 w-4" />
           Sign out

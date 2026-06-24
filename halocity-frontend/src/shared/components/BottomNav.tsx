@@ -49,7 +49,7 @@ export function BottomNav({ role }: BottomNavProps) {
   if (nav.length === 0) return null
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-white">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background">
       <div className="mx-auto flex max-w-lg justify-around">
         {nav.map((item) => (
             <NavLink
@@ -62,7 +62,7 @@ export function BottomNav({ role }: BottomNavProps) {
                 'flex min-h-[56px] min-w-[56px] flex-col items-center justify-center gap-0.5 px-3 text-[10px] font-medium',
                 isActive
                   ? 'text-primary'
-                  : 'text-[#94A3B8] hover:text-[#64748B]',
+                  : 'text-muted-foreground/50 hover:text-muted-foreground',
               )
             }
           >

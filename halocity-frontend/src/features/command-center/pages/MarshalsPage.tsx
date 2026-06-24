@@ -72,7 +72,7 @@ export default function MarshalsPage() {
   if (isLoading) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Mayors</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Mayors</h1>
         <TableSkeleton />
       </div>
     )
@@ -81,7 +81,7 @@ export default function MarshalsPage() {
   if (isError) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Mayors</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Mayors</h1>
         <ErrorState onRetry={() => refetch()} />
       </div>
     )
@@ -89,17 +89,17 @@ export default function MarshalsPage() {
 
   return (
     <div className="p-6">
-      <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Mayors</h1>
+      <h1 className="mb-6 text-xl font-semibold text-foreground">Mayors</h1>
 
       <div className="overflow-x-auto rounded-lg border border-border">
         <table className="w-full">
           <thead>
             <tr className="border-b border-border bg-surface-alt">
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-[#64748B]">Name</th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-[#64748B]">Zone</th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-[#64748B]">Status</th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-[#64748B]">Last Active</th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-[#64748B]">Actions</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Name</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Zone</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Status</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Last Active</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -115,12 +115,12 @@ export default function MarshalsPage() {
               location?: { lat: number; lng: number; updatedAt: string } | null
             }) => (
               <tr key={m.id} className="border-b border-border transition-colors hover:bg-surface-alt">
-                <td className="px-4 py-3 text-sm text-[#0F172A]">{m.name || 'Unknown'}</td>
-                <td className="px-4 py-3 text-sm text-[#64748B]">{m.zone?.name || m.zone?.code || 'Unassigned'}</td>
+                <td className="px-4 py-3 text-sm text-foreground">{m.name || 'Unknown'}</td>
+                <td className="px-4 py-3 text-sm text-muted-foreground">{m.zone?.name || m.zone?.code || 'Unassigned'}</td>
                 <td className="px-4 py-3">
                   <AvailabilityIndicator availability={deriveAvailability(m.location?.updatedAt, !!m.zone)} />
                 </td>
-                <td className="px-4 py-3 text-xs text-[#94A3B8]">
+                <td className="px-4 py-3 text-xs text-muted-foreground/60">
                   {m.location?.updatedAt
                     ? new Date(m.location.updatedAt).toLocaleString()
                     : m.updatedAt
@@ -159,7 +159,7 @@ export default function MarshalsPage() {
       </div>
 
       {marshals.length === 0 && (
-        <div className="mt-6 text-center text-sm text-[#64748B]">No mayors found</div>
+        <div className="mt-6 text-center text-sm text-muted-foreground">No mayors found</div>
       )}
 
       <Dialog open={assignModal.open} onOpenChange={(open) => setAssignModal({ ...assignModal, open })}>

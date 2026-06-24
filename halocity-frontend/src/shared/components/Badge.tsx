@@ -14,7 +14,7 @@ const statusColors: Record<IncidentStatus, string> = {
   IN_PROGRESS: 'bg-primary-light text-primary-text border-primary/20',
   ESCALATED: 'bg-critical-light text-critical-text border-critical/20',
   RESOLVED: 'bg-success-light text-success-text border-success/20',
-  CLOSED: 'bg-surface-alt text-[#64748B] border-border',
+  CLOSED: 'bg-surface-alt text-muted-foreground border-border',
 }
 
 interface BadgeProps {

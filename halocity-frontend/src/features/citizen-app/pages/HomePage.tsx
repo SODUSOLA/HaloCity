@@ -52,10 +52,10 @@ export default function HomePage() {
   return (
     <div className="space-y-6 p-4">
       <section>
-        <h1 className="text-xl font-semibold text-[#0F172A]">
+        <h1 className="text-xl font-semibold text-foreground">
           {getGreeting()}, {firstName}
         </h1>
-        <p className="mt-1 text-sm text-[#64748B]">
+        <p className="mt-1 text-sm text-muted-foreground">
           {user?.zone ? `Zone: ${user.zone.name}` : 'Stay informed about your community'}
         </p>
       </section>
@@ -67,21 +67,21 @@ export default function HomePage() {
       ) : (
         <section className="grid grid-cols-3 gap-3">
           <div className="rounded-lg border border-border p-3">
-            <div className="mb-1 flex items-center gap-1 text-xs text-[#64748B]">
+            <div className="mb-1 flex items-center gap-1 text-xs text-muted-foreground">
               <FileText className="h-3 w-3" />
               Total
             </div>
-            <p className="text-2xl font-bold text-[#0F172A]">{totalReports}</p>
+            <p className="text-2xl font-bold text-foreground">{totalReports}</p>
           </div>
           <div className="rounded-lg border border-border p-3">
-            <div className="mb-1 flex items-center gap-1 text-xs text-[#64748B]">
+            <div className="mb-1 flex items-center gap-1 text-xs text-muted-foreground">
               <Clock className="h-3 w-3" />
               Pending
             </div>
             <p className="text-2xl font-bold text-warning">{pendingCount}</p>
           </div>
           <div className="rounded-lg border border-border p-3">
-            <div className="mb-1 flex items-center gap-1 text-xs text-[#64748B]">
+            <div className="mb-1 flex items-center gap-1 text-xs text-muted-foreground">
               <CheckCircle2 className="h-3 w-3" />
               Resolved
             </div>
@@ -108,7 +108,7 @@ export default function HomePage() {
           </Link>
           <Link
             to="/app/reports"
-            className="flex flex-col items-center gap-2 rounded-lg border border-border bg-surface-alt p-4 text-center text-xs font-medium text-[#64748B] transition-colors hover:opacity-80"
+            className="flex flex-col items-center gap-2 rounded-lg border border-border bg-surface-alt p-4 text-center text-xs font-medium text-muted-foreground transition-colors hover:opacity-80"
           >
             <ClipboardList className="h-5 w-5" />
             View Reports
@@ -118,7 +118,7 @@ export default function HomePage() {
 
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Recent Reports
           </h2>
           <Link
@@ -146,19 +146,19 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="rounded-lg border border-border p-6 text-center">
-            <FileText className="mx-auto mb-2 h-8 w-8 text-[#94A3B8]" />
-            <p className="text-sm text-[#64748B]">No reports yet</p>
+            <FileText className="mx-auto mb-2 h-8 w-8 text-muted-foreground/60" />
+            <p className="text-sm text-muted-foreground">No reports yet</p>
           </div>
         )}
       </section>
 
       <section>
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Active Alerts
         </h2>
         <div className="rounded-lg border border-border p-6 text-center">
-          <AlertTriangle className="mx-auto mb-2 h-8 w-8 text-[#94A3B8]" />
-          <p className="text-sm text-[#64748B]">No active alerts in your zone</p>
+          <AlertTriangle className="mx-auto mb-2 h-8 w-8 text-muted-foreground/60" />
+          <p className="text-sm text-muted-foreground">No active alerts in your zone</p>
         </div>
       </section>
     </div>

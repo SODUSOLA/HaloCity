@@ -15,48 +15,48 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6 p-4">
-      <h1 className="text-lg font-semibold text-[#0F172A]">Profile</h1>
+      <h1 className="text-lg font-semibold text-foreground">Profile</h1>
 
       <div className="flex flex-col items-center py-6">
         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-xl font-bold text-white">
           {user?.name?.charAt(0)?.toUpperCase() || '?'}
         </div>
-        <h2 className="text-lg font-semibold text-[#0F172A]">{user?.name}</h2>
-        <p className="text-xs text-[#64748B]">
+        <h2 className="text-lg font-semibold text-foreground">{user?.name}</h2>
+        <p className="text-xs text-muted-foreground">
           {user?.role === 'CITIZEN' ? 'Citizen' : user?.role === 'MAYOR' ? 'Mayor' : 'Admin'}
         </p>
       </div>
 
       <div className="space-y-3">
         <div className="flex items-center gap-3 rounded-lg border border-border p-3">
-          <Mail className="h-4 w-4 text-[#64748B]" />
+          <Mail className="h-4 w-4 text-muted-foreground" />
           <div>
-            <p className="text-xs text-[#94A3B8]">Email</p>
-            <p className="text-sm text-[#0F172A]">{user?.email}</p>
+            <p className="text-xs text-muted-foreground/60">Email</p>
+            <p className="text-sm text-foreground">{user?.email}</p>
           </div>
         </div>
         <div className="flex items-center gap-3 rounded-lg border border-border p-3">
-          <Phone className="h-4 w-4 text-[#64748B]" />
+          <Phone className="h-4 w-4 text-muted-foreground" />
           <div>
-            <p className="text-xs text-[#94A3B8]">Phone</p>
-            <p className="text-sm text-[#0F172A]">{user?.phone}</p>
+            <p className="text-xs text-muted-foreground/60">Phone</p>
+            <p className="text-sm text-foreground">{user?.phone}</p>
           </div>
         </div>
         <div className="flex items-center gap-3 rounded-lg border border-border p-3">
-          <Shield className="h-4 w-4 text-[#64748B]" />
+          <Shield className="h-4 w-4 text-muted-foreground" />
           <div>
-            <p className="text-xs text-[#94A3B8]">Role</p>
-            <p className="text-sm text-[#0F172A]">
+            <p className="text-xs text-muted-foreground/60">Role</p>
+            <p className="text-sm text-foreground">
               {user?.role === 'CITIZEN' ? 'Citizen' : user?.role === 'MAYOR' ? 'Mayor' : 'Admin'}
             </p>
           </div>
         </div>
         {user?.zone && (
           <div className="flex items-center gap-3 rounded-lg border border-border p-3">
-            <Shield className="h-4 w-4 text-[#64748B]" />
+            <Shield className="h-4 w-4 text-muted-foreground" />
             <div>
-              <p className="text-xs text-[#94A3B8]">Zone</p>
-              <p className="text-sm text-[#0F172A]">{user.zone.name}</p>
+              <p className="text-xs text-muted-foreground/60">Zone</p>
+              <p className="text-sm text-foreground">{user.zone.name}</p>
             </div>
           </div>
         )}

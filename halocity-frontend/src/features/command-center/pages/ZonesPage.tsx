@@ -14,7 +14,7 @@ export default function ZonesPage() {
   if (isLoading) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Zones</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Zones</h1>
         <TableSkeleton />
       </div>
     )
@@ -23,7 +23,7 @@ export default function ZonesPage() {
   if (isError) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Zones</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Zones</h1>
         <ErrorState onRetry={() => refetch()} />
       </div>
     )
@@ -31,19 +31,19 @@ export default function ZonesPage() {
 
   return (
     <div className="p-6">
-      <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Zones</h1>
+      <h1 className="mb-6 text-xl font-semibold text-foreground">Zones</h1>
 
       <div className="overflow-x-auto rounded-lg border border-border">
         <table className="w-full">
           <thead>
             <tr className="border-b border-border bg-surface-alt">
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-[#64748B]">
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Name
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-[#64748B]">
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Code
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-[#64748B]">
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Status
               </th>
             </tr>
@@ -54,8 +54,8 @@ export default function ZonesPage() {
                 key={zone.id}
                 className="border-b border-border transition-colors hover:bg-surface-alt"
               >
-                <td className="px-4 py-3 text-sm text-[#0F172A]">{zone.name}</td>
-                <td className="px-4 py-3 font-mono text-xs text-[#64748B]">
+                <td className="px-4 py-3 text-sm text-foreground">{zone.name}</td>
+                <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
                   {zone.code || '—'}
                 </td>
                 <td className="px-4 py-3">
@@ -63,7 +63,7 @@ export default function ZonesPage() {
                     className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${
                       zone.isActive
                         ? 'bg-success-light text-success-text'
-                        : 'bg-surface-alt text-[#64748B]'
+                        : 'bg-surface-alt text-muted-foreground'
                     }`}
                   >
                     {zone.isActive ? 'Active' : 'Inactive'}
@@ -76,7 +76,7 @@ export default function ZonesPage() {
       </div>
 
       {zones.length === 0 && (
-        <div className="mt-6 text-center text-sm text-[#64748B]">No zones found</div>
+        <div className="mt-6 text-center text-sm text-muted-foreground">No zones found</div>
       )}
     </div>
   )

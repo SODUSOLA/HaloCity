@@ -33,7 +33,7 @@ export default function MapPage() {
   if (isLoading) {
     return (
       <div className="p-4">
-        <h1 className="mb-4 text-lg font-semibold text-[#0F172A]">Map</h1>
+        <h1 className="mb-4 text-lg font-semibold text-foreground">Map</h1>
         <CardSkeleton />
       </div>
     )
@@ -49,9 +49,9 @@ export default function MapPage() {
 
   return (
     <div className="p-4">
-      <h1 className="mb-4 text-lg font-semibold text-[#0F172A]">Map</h1>
+      <h1 className="mb-4 text-lg font-semibold text-foreground">Map</h1>
 
-      <div className="mb-4 flex items-center justify-between rounded-lg border border-border bg-surface-alt p-3 text-xs text-[#64748B]">
+      <div className="mb-4 flex items-center justify-between rounded-lg border border-border bg-surface-alt p-3 text-xs text-muted-foreground">
         <span>{withCoords.length} incident(s) with location data</span>
       </div>
 
@@ -74,8 +74,8 @@ export default function MapPage() {
                   <Marker key={inc.id} position={[inc.locationLat!, inc.locationLng!]}>
                     <Popup>
                       <div className="min-w-[180px] space-y-2">
-                        <p className="text-xs font-mono text-[#64748B]">{inc.referenceCode}</p>
-                        <p className="text-sm font-medium text-[#0F172A]">
+                        <p className="text-xs font-mono text-muted-foreground">{inc.referenceCode}</p>
+                        <p className="text-sm font-medium text-foreground">
                           {inc.type.charAt(0) + inc.type.slice(1).toLowerCase().replace('_', ' ')}
                         </p>
                         <div className="flex gap-1">
@@ -83,7 +83,7 @@ export default function MapPage() {
                           <Badge variant="status" value={inc.status} />
                         </div>
                         {inc.description && (
-                          <p className="text-xs text-[#64748B] line-clamp-2">{inc.description}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-2">{inc.description}</p>
                         )}
                         <a
                           href={`https://www.google.com/maps/dir/?api=1&destination=${inc.locationLat},${inc.locationLng}&travelmode=driving`}
@@ -104,7 +104,7 @@ export default function MapPage() {
         </div>
       ) : (
         <div className="rounded-lg border border-border p-6 text-center">
-          <p className="text-sm text-[#64748B]">No incidents with location data</p>
+          <p className="text-sm text-muted-foreground">No incidents with location data</p>
         </div>
       )}
     </div>

@@ -31,7 +31,7 @@ export default function AlertsPage() {
 
   return (
     <div className="p-4">
-      <h1 className="mb-4 text-lg font-semibold text-[#0F172A]">Alerts</h1>
+      <h1 className="mb-4 text-lg font-semibold text-foreground">Alerts</h1>
 
       {isLoading ? (
         <ListSkeleton count={3} />
@@ -46,17 +46,17 @@ export default function AlertsPage() {
               }`}
             >
               <div className="mt-1 shrink-0">
-                {typeIcons[n.type] || <Bell className="h-5 w-5 text-[#64748B]" />}
+                {typeIcons[n.type] || <Bell className="h-5 w-5 text-muted-foreground" />}
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-[#0F172A]">{n.title}</p>
-                <p className="mt-0.5 text-xs text-[#64748B]">{n.body}</p>
-                <p className="mt-1 text-xs text-[#94A3B8]">
+                <p className="text-sm font-medium text-foreground">{n.title}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">{n.body}</p>
+                <p className="mt-1 text-xs text-muted-foreground/60">
                   {new Date(n.createdAt).toLocaleString()}
                 </p>
               </div>
               {n.referenceId && n.referenceType === 'incident' && (
-                <ExternalLink className="mt-1 h-4 w-4 shrink-0 text-[#94A3B8]" />
+                <ExternalLink className="mt-1 h-4 w-4 shrink-0 text-muted-foreground/60" />
               )}
             </div>
           ))}

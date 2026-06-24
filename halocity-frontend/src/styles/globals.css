@@ -7,64 +7,93 @@ html {
 }
 
 :root {
-  --color-primary: #1E40AF;
-  --color-primary-hover: #1E3A8A;
-  --color-primary-light: #DBEAFE;
-  --color-primary-text: #1E40AF;
+  --background: 0 0% 100%;
+  --foreground: 222 84% 5%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 84% 5%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 84% 5%;
 
-  --color-success: #059669;
-  --color-success-hover: #047857;
-  --color-success-light: #D1FAE5;
-  --color-success-text: #065F46;
+  --surface: 210 40% 98%;
+  --surface-alt: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
 
-  --color-warning: #D97706;
-  --color-warning-hover: #B45309;
-  --color-warning-light: #FEF3C7;
-  --color-warning-text: #92400E;
+  --border: 214 32% 91%;
+  --border-strong: 215 25% 87%;
+  --input: 214 32% 91%;
+  --input-background: 0 0% 100%;
 
-  --color-critical: #DC2626;
-  --color-critical-hover: #B91C1C;
-  --color-critical-light: #FEE2E2;
-  --color-critical-text: #991B1B;
+  --primary: 224 71% 48%;
+  --primary-hover: 224 71% 38%;
+  --primary-foreground: 0 0% 100%;
+  --primary-light: 214 100% 92%;
 
-  --color-bg: #F8FAFC;
-  --color-surface: #FFFFFF;
-  --color-surface-alt: #F1F5F9;
-  --color-border: #E2E8F0;
-  --color-border-strong: #CBD5E1;
-  --color-text-primary: #0F172A;
-  --color-text-secondary: #64748B;
-  --color-text-tertiary: #94A3B8;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 84% 5%;
+
+  --accent: 214 100% 92%;
+  --accent-foreground: 224 71% 48%;
+
+  --muted: 210 40% 96%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  --success: 142 76% 36%;
+  --success-light: 138 76% 92%;
+  --warning: 38 92% 50%;
+  --warning-light: 42 73% 84%;
+  --danger: 0 72% 51%;
+  --danger-light: 0 93% 94%;
+
+  --ring: 224 71% 48%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 222 84% 3%;
+  --foreground: 210 40% 98%;
+  --card: 222 84% 8%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222 84% 8%;
+  --popover-foreground: 210 40% 98%;
+
+  --surface: 222 84% 5%;
+  --surface-alt: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+
+  --border: 217 33% 17%;
+  --border-strong: 215 25% 27%;
+  --input: 217 33% 17%;
+  --input-background: 217 33% 12%;
+
+  --primary: 217 91% 60%;
+  --primary-hover: 224 76% 48%;
+  --primary-foreground: 0 0% 100%;
+  --primary-light: 214 54% 24%;
+
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 98%;
+
+  --accent: 217 33% 17%;
+  --accent-foreground: 210 40% 98%;
+
+  --muted: 217 33% 17%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  --success: 142 76% 36%;
+  --success-light: 142 76% 10%;
+  --warning: 38 92% 56%;
+  --warning-light: 20 92% 14%;
+  --danger: 0 72% 57%;
+  --danger-light: 0 74% 16%;
+
+  --ring: 217 91% 60%;
 }
 
 @layer base {
-  :root {
-    --background: 210 40% 98%;
-    --foreground: 222 84% 5%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 84% 5%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 84% 5%;
-    --primary: 224 71% 40%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 84% 5%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 214 100% 92%;
-    --accent-foreground: 224 71% 40%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 210 40% 98%;
-    --success: 161 94% 30%;
-    --success-foreground: 210 40% 98%;
-    --warning: 38 92% 44%;
-    --warning-foreground: 210 40% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 224 71% 40%;
-    --radius: 0.5rem;
-  }
-
   * {
     @apply border-border;
   }
@@ -73,55 +102,4 @@ html {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', -apple-system, sans-serif;
   }
-}
-
-.dark {
-  --color-primary: #3B82F6;
-  --color-primary-hover: #2563EB;
-  --color-primary-light: #1E3A5F;
-  --color-primary-text: #60A5FA;
-
-  --color-success: #10B981;
-  --color-success-hover: #059669;
-  --color-success-light: #064E3B;
-  --color-success-text: #6EE7B7;
-
-  --color-warning: #F59E0B;
-  --color-warning-hover: #D97706;
-  --color-warning-light: #451A03;
-  --color-warning-text: #FCD34D;
-
-  --color-critical: #EF4444;
-  --color-critical-hover: #DC2626;
-  --color-critical-light: #450A0A;
-  --color-critical-text: #FCA5A5;
-
-  --color-bg: #0F172A;
-  --color-surface: #1E293B;
-  --color-surface-alt: #334155;
-  --color-border: #334155;
-  --color-border-strong: #475569;
-  --color-text-primary: #F1F5F9;
-  --color-text-secondary: #94A3B8;
-  --color-text-tertiary: #64748B;
-
-  --background: 222 84% 5%;
-  --foreground: 210 40% 98%;
-  --card: 222 84% 8%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222 84% 8%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 224 71% 45%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 217 33% 17%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-  --accent: 217 33% 17%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 72% 51%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217 33% 17%;
-  --input: 217 33% 17%;
-  --ring: 224 71% 60%;
 }

@@ -81,36 +81,36 @@ export function IncidentDetailSheet({
             </div>
 
             <div className="rounded-lg border border-border p-4">
-              <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[#64748B]">
+              <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Type
               </p>
-              <p className="text-sm text-[#0F172A]">
+              <p className="text-sm text-foreground">
                 {incident.type.charAt(0) +
                   incident.type.slice(1).toLowerCase().replace('_', ' ')}
               </p>
             </div>
 
             <div className="rounded-lg border border-border p-4">
-              <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[#64748B]">
+              <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Description
               </p>
-              <p className="text-sm text-[#0F172A]">{incident.description}</p>
+              <p className="text-sm text-foreground">{incident.description}</p>
             </div>
 
             <div className="rounded-lg border border-border p-4">
-              <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[#64748B]">
+              <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Reporter
               </p>
-              <p className="text-sm text-[#0F172A]">
+              <p className="text-sm text-foreground">
                 {incident.reporter?.name || 'Anonymous'}
               </p>
               {incident.reporter?.phone && (
-                <p className="text-xs text-[#64748B]">{incident.reporter.phone}</p>
+                <p className="text-xs text-muted-foreground">{incident.reporter.phone}</p>
               )}
             </div>
 
             <div>
-              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#64748B]">
+              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Status Timeline
               </p>
               <IncidentStatusTimeline
@@ -123,7 +123,7 @@ export function IncidentDetailSheet({
 
             {incident.status !== 'RESOLVED' && incident.status !== 'CLOSED' && (
               <div className="space-y-3">
-                <p className="text-xs font-medium uppercase tracking-wide text-[#64748B]">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   Actions
                 </p>
 
@@ -180,7 +180,7 @@ export function IncidentDetailSheet({
 
             {incident.mediaUrls.length > 0 && (
               <div>
-                <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#64748B]">
+                <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   Evidence ({incident.mediaUrls.length})
                 </p>
                 <div className="grid grid-cols-2 gap-2">
@@ -197,7 +197,7 @@ export function IncidentDetailSheet({
             )}
           </div>
         ) : (
-          <p className="mt-6 text-sm text-[#64748B]">Incident not found</p>
+          <p className="mt-6 text-sm text-muted-foreground">Incident not found</p>
         )}
       </SheetContent>
     </Sheet>

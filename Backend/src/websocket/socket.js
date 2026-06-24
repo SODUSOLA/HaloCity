@@ -6,9 +6,10 @@ import logger from '../config/logger.js';
 let io = null;
 
 export function initSocket(httpServer) {
+const allowedOrigins = config.CLIENT_URL.split(',').map((s) => s.trim());
   io = new Server(httpServer, {
     cors: {
-      origin: config.CLIENT_URL,
+      origin: allowedOrigins,
       credentials: true,
     },
   });

@@ -146,12 +146,12 @@ export default function ReportWizardPage() {
       <div className="flex items-center gap-3">
         {step > 0 && (
           <button onClick={handleBack} className="p-1" aria-label="Go back">
-            <ArrowLeft className="h-5 w-5 text-[#64748B]" />
+            <ArrowLeft className="h-5 w-5 text-muted-foreground" />
           </button>
         )}
         <div>
-          <h1 className="text-lg font-semibold text-[#0F172A]">Report Incident</h1>
-          <p className="text-xs text-[#64748B]">
+          <h1 className="text-lg font-semibold text-foreground">Report Incident</h1>
+          <p className="text-xs text-muted-foreground">
             Step {step + 1} of {steps.length}: {steps[step]}
           </p>
         </div>
@@ -168,7 +168,7 @@ export default function ReportWizardPage() {
 
       {step === 0 && (
         <div className="space-y-3">
-          <p className="text-sm text-[#64748B]">What type of incident are you reporting?</p>
+          <p className="text-sm text-muted-foreground">What type of incident are you reporting?</p>
           {incidentTypes.map((type) => (
             <button
               key={type.value}
@@ -181,8 +181,8 @@ export default function ReportWizardPage() {
                   : 'border-border hover:border-primary/50',
               )}
             >
-              <p className="text-sm font-medium text-[#0F172A]">{type.label}</p>
-              <p className="text-xs text-[#64748B]">{type.description}</p>
+              <p className="text-sm font-medium text-foreground">{type.label}</p>
+              <p className="text-xs text-muted-foreground">{type.description}</p>
             </button>
           ))}
           {form.formState.errors.type && (
@@ -194,7 +194,7 @@ export default function ReportWizardPage() {
       {step === 1 && (
         <div className="space-y-4">
           <div>
-            <label className="mb-1 block text-xs font-medium text-[#64748B]">Title</label>
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">Title</label>
             <input
               className="w-full rounded-lg border border-border p-3 text-sm focus:border-primary focus:outline-none"
               placeholder="Brief title for the incident"
@@ -206,7 +206,7 @@ export default function ReportWizardPage() {
             )}
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-[#64748B]">Description (optional)</label>
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">Description (optional)</label>
             <div className="relative">
               <textarea
                 className="min-h-[120px] w-full rounded-lg border border-border p-3 pr-10 text-sm focus:border-primary focus:outline-none"
@@ -224,20 +224,20 @@ export default function ReportWizardPage() {
 
       {step === 2 && (
         <div className="space-y-4">
-          <p className="text-sm text-[#64748B]">Where did this happen?</p>
+          <p className="text-sm text-muted-foreground">Where did this happen?</p>
 
           <Button variant="outline" className="w-full" onClick={handleDetectLocation}>
             Detect my location
           </Button>
 
           {(form.watch('locationLat') || form.watch('locationLng')) && (
-            <div className="rounded-lg border border-border bg-surface-alt p-3 text-xs text-[#64748B]">
+            <div className="rounded-lg border border-border bg-surface-alt p-3 text-xs text-muted-foreground">
               Lat: {form.watch('locationLat')?.toFixed(6)}, Lng: {form.watch('locationLng')?.toFixed(6)}
             </div>
           )}
 
           <div className="border-t border-border pt-4">
-            <label className="mb-2 block text-xs font-medium text-[#64748B]">Zone</label>
+            <label className="mb-2 block text-xs font-medium text-muted-foreground">Zone</label>
             {zonesLoading ? (
               <Skeleton className="h-11 w-full rounded-lg" />
             ) : (
@@ -263,7 +263,7 @@ export default function ReportWizardPage() {
 
       {step === 3 && (
         <div className="space-y-3">
-          <p className="text-sm text-[#64748B]">Add photos (max 5)</p>
+          <p className="text-sm text-muted-foreground">Add photos (max 5)</p>
           <input
             ref={fileInputRef}
             type="file"
@@ -297,38 +297,38 @@ export default function ReportWizardPage() {
       {step === 4 && (
         <div className="space-y-4">
           <div className="rounded-lg border border-border p-4">
-            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[#64748B]">Type</p>
-            <p className="text-sm text-[#0F172A]">
+            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Type</p>
+            <p className="text-sm text-foreground">
               {watchType ? incidentTypes.find((t) => t.value === watchType)?.label || watchType : 'Not selected'}
             </p>
           </div>
           <div className="rounded-lg border border-border p-4">
-            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[#64748B]">Title</p>
-            <p className="text-sm text-[#0F172A]">{watchTitle || '—'}</p>
+            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Title</p>
+            <p className="text-sm text-foreground">{watchTitle || '—'}</p>
           </div>
           <div className="rounded-lg border border-border p-4">
-            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[#64748B]">Description</p>
-            <p className="text-sm text-[#0F172A]">{watchDescription || 'No description'}</p>
+            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Description</p>
+            <p className="text-sm text-foreground">{watchDescription || 'No description'}</p>
           </div>
           <div className="rounded-lg border border-border p-4">
-            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[#64748B]">Zone</p>
-            <p className="text-sm text-[#0F172A]">
+            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Zone</p>
+            <p className="text-sm text-foreground">
               {watchZoneId
                 ? (Array.isArray(zones) ? zones : []).find((z: Zone) => z.id === watchZoneId)?.name || watchZoneId
                 : 'Not selected'}
             </p>
           </div>
           <div className="rounded-lg border border-border p-4">
-            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[#64748B]">Location</p>
-            <p className="text-sm text-[#0F172A]">
+            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Location</p>
+            <p className="text-sm text-foreground">
               {form.watch('locationLat')
                 ? `${form.watch('locationLat')?.toFixed(4)}, ${form.watch('locationLng')?.toFixed(4)}`
                 : 'Not detected'}
             </p>
           </div>
           <div className="rounded-lg border border-border p-4">
-            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[#64748B]">Photos</p>
-            <p className="text-sm text-[#0F172A]">
+            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Photos</p>
+            <p className="text-sm text-foreground">
               {watchMediaUrls && watchMediaUrls.length > 0 ? `${watchMediaUrls.length} photo(s)` : 'No photos'}
             </p>
           </div>
@@ -394,7 +394,7 @@ function VoiceInput({ onResult }: { onResult: (text: string) => void }) {
       type="button"
       onClick={toggle}
       className={`absolute bottom-2 right-2 rounded-full p-1.5 transition-colors ${
-        listening ? 'bg-critical text-white animate-pulse' : 'text-[#94A3B8] hover:text-[#64748B]'
+        listening ? 'bg-critical text-white animate-pulse' : 'text-muted-foreground/60 hover:text-muted-foreground'
       }`}
       aria-label={listening ? 'Stop recording' : 'Start voice input'}
     >

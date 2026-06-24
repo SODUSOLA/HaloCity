@@ -25,7 +25,8 @@ app.set('trust proxy', 1);
 
 app.use(helmet());
 app.use(compression());
-app.use(cors({ origin: config.CLIENT_URL, credentials: true }));
+const allowedOrigins = config.CLIENT_URL.split(',').map((s) => s.trim());
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
 

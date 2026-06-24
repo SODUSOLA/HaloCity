@@ -21,7 +21,7 @@ export default function MaintenancePage() {
   if (isLoading) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Maintenance</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Maintenance</h1>
         <TableSkeleton />
       </div>
     )
@@ -30,7 +30,7 @@ export default function MaintenancePage() {
   if (isError) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Maintenance</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Maintenance</h1>
         <ErrorState onRetry={() => refetch()} />
       </div>
     )
@@ -38,7 +38,7 @@ export default function MaintenancePage() {
 
   return (
     <div className="p-6">
-      <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Maintenance</h1>
+      <h1 className="mb-6 text-xl font-semibold text-foreground">Maintenance</h1>
 
       <div className="mb-6 flex gap-1 rounded-lg bg-surface-alt p-1">
         {(['assets', 'tickets'] as const).map((t) => (
@@ -48,8 +48,8 @@ export default function MaintenancePage() {
             className={cn(
               'flex-1 rounded-md px-3 py-2 text-xs font-medium capitalize transition-colors',
               tab === t
-                ? 'bg-white text-[#0F172A] shadow-sm'
-                : 'text-[#64748B] hover:text-[#0F172A]',
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground',
             )}
           >
             {t}
@@ -67,10 +67,10 @@ export default function MaintenancePage() {
                   className="flex items-center justify-between rounded-lg border border-border p-4"
                 >
                   <div>
-                    <p className="text-sm font-medium text-[#0F172A]">
+                    <p className="text-sm font-medium text-foreground">
                       {zone.name}
                     </p>
-                    <p className="font-mono text-xs text-[#94A3B8]">
+                    <p className="font-mono text-xs text-muted-foreground/60">
                       {zone.code || '—'}
                     </p>
                   </div>

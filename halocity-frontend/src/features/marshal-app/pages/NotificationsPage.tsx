@@ -17,7 +17,7 @@ export default function NotificationsPage() {
   if (isLoading) {
     return (
       <div className="p-4">
-        <h1 className="mb-4 text-lg font-semibold text-[#0F172A]">Notifications</h1>
+        <h1 className="mb-4 text-lg font-semibold text-foreground">Notifications</h1>
         <ListSkeleton />
       </div>
     )
@@ -26,7 +26,7 @@ export default function NotificationsPage() {
   if (isError) {
     return (
       <div className="p-4">
-        <h1 className="mb-4 text-lg font-semibold text-[#0F172A]">Notifications</h1>
+        <h1 className="mb-4 text-lg font-semibold text-foreground">Notifications</h1>
         <ErrorState onRetry={() => refetch()} />
       </div>
     )
@@ -34,7 +34,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="p-4">
-      <h1 className="mb-4 text-lg font-semibold text-[#0F172A]">Notifications</h1>
+      <h1 className="mb-4 text-lg font-semibold text-foreground">Notifications</h1>
       {notifications.length > 0 ? (
         <div className="space-y-2">
           {notifications.map((n) => (
@@ -42,11 +42,11 @@ export default function NotificationsPage() {
               key={n.id}
               className="flex items-start gap-3 rounded-lg border border-border p-3"
             >
-              <Bell className="mt-0.5 h-4 w-4 shrink-0 text-[#64748B]" />
+              <Bell className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
               <div className="flex-1">
-                <p className="text-sm font-medium text-[#0F172A]">{n.title}</p>
-                <p className="mt-0.5 text-xs text-[#64748B]">{n.message}</p>
-                <p className="mt-1 text-xs text-[#94A3B8]">
+                <p className="text-sm font-medium text-foreground">{n.title}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">{n.message}</p>
+                <p className="mt-1 text-xs text-muted-foreground/60">
                   {new Date(n.createdAt).toLocaleString()}
                 </p>
               </div>

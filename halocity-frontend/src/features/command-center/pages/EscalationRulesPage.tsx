@@ -73,7 +73,7 @@ export default function EscalationRulesPage() {
   if (isLoading) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Escalation Rules</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Escalation Rules</h1>
         <ListSkeleton />
       </div>
     )
@@ -82,7 +82,7 @@ export default function EscalationRulesPage() {
   if (isError) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Escalation Rules</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Escalation Rules</h1>
         <ErrorState onRetry={() => refetch()} />
       </div>
     )
@@ -91,7 +91,7 @@ export default function EscalationRulesPage() {
   return (
     <div className="p-6">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-[#0F172A]">Escalation Rules</h1>
+        <h1 className="text-xl font-semibold text-foreground">Escalation Rules</h1>
         <Button size="sm" onClick={() => setCreateOpen(true)}>
           <Plus className="mr-1 h-4 w-4" /> Add Rule
         </Button>
@@ -112,15 +112,15 @@ export default function EscalationRulesPage() {
             <div key={rule.id} className="rounded-lg border border-border p-4">
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-[#0F172A]">
+                  <p className="text-sm font-medium text-foreground">
                     {rule.incidentType || 'Any Type'} / {rule.severity || 'Any Severity'}
-                    {!rule.isActive && <span className="ml-2 text-xs text-[#94A3B8]">(Inactive)</span>}
+                    {!rule.isActive && <span className="ml-2 text-xs text-muted-foreground/60">(Inactive)</span>}
                   </p>
-                  <p className="text-xs text-[#64748B]">
+                  <p className="text-xs text-muted-foreground">
                     Escalate to {rule.escalateTo} after {rule.windowSeconds}s · Via {Array.isArray(rule.notifyVia) ? rule.notifyVia.join(', ') : rule.notifyVia}
                   </p>
                   {rule.createdBy && (
-                    <p className="text-xs text-[#94A3B8]">Created by {rule.createdBy.name}</p>
+                    <p className="text-xs text-muted-foreground/60">Created by {rule.createdBy.name}</p>
                   )}
                 </div>
                 <Button
@@ -152,7 +152,7 @@ export default function EscalationRulesPage() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <p className="mb-1 text-xs font-medium text-[#64748B]">Incident Type (optional)</p>
+              <p className="mb-1 text-xs font-medium text-muted-foreground">Incident Type (optional)</p>
               <Select
                 value={form.incidentType}
                 onValueChange={(v) => setForm({ ...form, incidentType: v })}
@@ -168,7 +168,7 @@ export default function EscalationRulesPage() {
               </Select>
             </div>
             <div>
-              <p className="mb-1 text-xs font-medium text-[#64748B]">Severity (optional)</p>
+              <p className="mb-1 text-xs font-medium text-muted-foreground">Severity (optional)</p>
               <Select
                 value={form.severity}
                 onValueChange={(v) => setForm({ ...form, severity: v })}
@@ -184,7 +184,7 @@ export default function EscalationRulesPage() {
               </Select>
             </div>
             <div>
-              <p className="mb-1 text-xs font-medium text-[#64748B]">Window (seconds)</p>
+              <p className="mb-1 text-xs font-medium text-muted-foreground">Window (seconds)</p>
               <Input
                 type="number"
                 min={10}
@@ -193,7 +193,7 @@ export default function EscalationRulesPage() {
               />
             </div>
             <div>
-              <p className="mb-1 text-xs font-medium text-[#64748B]">Escalate To</p>
+              <p className="mb-1 text-xs font-medium text-muted-foreground">Escalate To</p>
               <Select
                 value={form.escalateTo}
                 onValueChange={(v) => setForm({ ...form, escalateTo: v })}

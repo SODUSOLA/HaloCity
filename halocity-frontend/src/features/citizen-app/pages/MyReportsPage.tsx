@@ -11,7 +11,7 @@ export default function MyReportsPage() {
   if (isLoading) {
     return (
       <div className="p-4">
-        <h1 className="mb-4 text-lg font-semibold text-[#0F172A]">My Reports</h1>
+        <h1 className="mb-4 text-lg font-semibold text-foreground">My Reports</h1>
         <ListSkeleton />
       </div>
     )
@@ -20,7 +20,7 @@ export default function MyReportsPage() {
   if (isError) {
     return (
       <div className="p-4">
-        <h1 className="mb-4 text-lg font-semibold text-[#0F172A]">My Reports</h1>
+        <h1 className="mb-4 text-lg font-semibold text-foreground">My Reports</h1>
         <ErrorState onRetry={() => refetch()} />
       </div>
     )
@@ -28,7 +28,7 @@ export default function MyReportsPage() {
 
   return (
     <div className="p-4">
-      <h1 className="mb-4 text-lg font-semibold text-[#0F172A]">My Reports</h1>
+      <h1 className="mb-4 text-lg font-semibold text-foreground">My Reports</h1>
       {incidents && incidents.length > 0 ? (
         <div className="space-y-2">
           {incidents.map((inc) => (

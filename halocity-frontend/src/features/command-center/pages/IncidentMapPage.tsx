@@ -45,9 +45,9 @@ function IncidentMarkers({ incidents }: { incidents: Incident[] }) {
         >
           <Popup>
             <div className="min-w-[180px] space-y-1.5">
-              <p className="text-xs font-mono text-[#64748B]">{inc.referenceCode}</p>
-              <p className="text-sm font-medium text-[#0F172A]">{inc.title || inc.type.replace('_', ' ')}</p>
-              <p className="text-xs text-[#64748B]">{inc.zone?.name || 'Unknown'}</p>
+              <p className="text-xs font-mono text-muted-foreground">{inc.referenceCode}</p>
+              <p className="text-sm font-medium text-foreground">{inc.title || inc.type.replace('_', ' ')}</p>
+              <p className="text-xs text-muted-foreground">{inc.zone?.name || 'Unknown'}</p>
               <div className="flex gap-1">
                 <span className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] text-red-600">{inc.severity}</span>
                 <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-600">{inc.status.replace('_', ' ')}</span>
@@ -74,7 +74,7 @@ export default function IncidentMapPage() {
   if (isLoading) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Incident Map</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Incident Map</h1>
         <CardSkeleton />
       </div>
     )
@@ -83,7 +83,7 @@ export default function IncidentMapPage() {
   if (live.isError) {
     return (
       <div className="p-6">
-        <h1 className="mb-6 text-xl font-semibold text-[#0F172A]">Incident Map</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Incident Map</h1>
         <ErrorState onRetry={() => live.refetch()} />
       </div>
     )
@@ -111,7 +111,7 @@ export default function IncidentMapPage() {
 
   return (
     <div className="space-y-4 p-6">
-      <h1 className="text-xl font-semibold text-[#0F172A]">Incident Map</h1>
+      <h1 className="text-xl font-semibold text-foreground">Incident Map</h1>
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex gap-2">
@@ -124,14 +124,14 @@ export default function IncidentMapPage() {
               className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 filterSeverity === severity
                   ? 'bg-[#0F172A] text-white'
-                  : 'bg-surface-alt text-[#64748B] hover:bg-border'
+                  : 'bg-surface-alt text-muted-foreground hover:bg-border'
               }`}
             >
               {severity} ({count})
             </button>
           ))}
         </div>
-        <label className="flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs text-[#64748B]">
+        <label className="flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground">
           <input
             type="checkbox"
             checked={showMayors}
@@ -158,7 +158,7 @@ export default function IncidentMapPage() {
         </div>
       ) : (
         <div className="rounded-lg border border-border p-12 text-center">
-          <p className="text-sm text-[#64748B]">
+          <p className="text-sm text-muted-foreground">
             {withCoords.length === 0
               ? 'No incidents with location data'
               : 'No incidents match the selected filter'}

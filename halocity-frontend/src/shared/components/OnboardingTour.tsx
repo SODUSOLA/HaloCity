@@ -60,23 +60,23 @@ export default function OnboardingTour({ role }: OnboardingTourProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 pb-16 sm:items-center sm:pb-0">
-      <div className="mx-4 w-full max-w-sm rounded-xl bg-white p-6 shadow-xl">
+      <div className="mx-4 w-full max-w-sm rounded-xl bg-card p-6 shadow-xl">
         <div className="flex items-start justify-between">
           <span className="text-xs font-medium text-primary">
             {step + 1} of {steps.length}
           </span>
           <button onClick={dismiss} aria-label="Close tour">
-            <X className="h-4 w-4 text-[#94A3B8]" />
+            <X className="h-4 w-4 text-muted-foreground/60" />
           </button>
         </div>
-        <h3 className="mt-3 text-base font-semibold text-[#0F172A]">{s.title}</h3>
-        <p className="mt-1 text-sm text-[#64748B]">{s.body}</p>
+        <h3 className="mt-3 text-base font-semibold text-foreground">{s.title}</h3>
+        <p className="mt-1 text-sm text-muted-foreground">{s.body}</p>
         <div className="mt-6 flex items-center justify-between">
           <div className="flex gap-1.5">
             {steps.map((_, i) => (
               <div
                 key={i}
-                className={`h-1.5 w-1.5 rounded-full ${i === step ? 'bg-primary' : 'bg-slate-200'}`}
+                className={`h-1.5 w-1.5 rounded-full ${i === step ? 'bg-primary' : 'bg-border'}`}
               />
             ))}
           </div>

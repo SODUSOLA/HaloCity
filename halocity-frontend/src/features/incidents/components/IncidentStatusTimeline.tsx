@@ -60,7 +60,7 @@ export function IncidentStatusTimeline({
                     'flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2',
                     dotKind === 'complete' && 'border-success bg-success text-white',
                     dotKind === 'current' && 'border-primary bg-primary text-white',
-                    dotKind === 'pending' && 'border-border bg-white text-[#94A3B8]',
+                    dotKind === 'pending' && 'border-border bg-white text-muted-foreground/60',
                   )}
                 >
                   <step.icon className="h-3.5 w-3.5" />
@@ -75,16 +75,16 @@ export function IncidentStatusTimeline({
                 <p
                   className={cn(
                     'text-sm font-medium',
-                    isComplete ? 'text-[#0F172A]' : 'text-[#94A3B8]',
+                    isComplete ? 'text-foreground' : 'text-muted-foreground/60',
                   )}
                 >
                   {step.label}
                 </p>
                 {step.status === 'PENDING' && createdAt && isComplete && (
-                  <p className="text-xs text-[#64748B]">{new Date(createdAt).toLocaleString()}</p>
+                  <p className="text-xs text-muted-foreground">{new Date(createdAt).toLocaleString()}</p>
                 )}
                 {step.status === 'RESOLVED' && resolvedAt && isComplete && (
-                  <p className="text-xs text-[#64748B]">{new Date(resolvedAt).toLocaleString()}</p>
+                  <p className="text-xs text-muted-foreground">{new Date(resolvedAt).toLocaleString()}</p>
                 )}
               </div>
             </div>
@@ -98,10 +98,10 @@ export function IncidentStatusTimeline({
                       <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
                       <div>
                         <p className="text-sm font-medium text-warning">Escalated</p>
-                        <p className="text-xs text-[#64748B]">
+                        <p className="text-xs text-muted-foreground">
                           {log.reason || 'Escalated to higher authority'}
                         </p>
-                        <p className="text-xs text-[#94A3B8]">
+                        <p className="text-xs text-muted-foreground/60">
                           {new Date(log.triggeredAt).toLocaleString()}
                         </p>
                       </div>
