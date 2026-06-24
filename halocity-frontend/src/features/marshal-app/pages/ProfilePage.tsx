@@ -3,13 +3,15 @@ import { Mail, Phone, MapPin, LogOut } from 'lucide-react'
 import { useAuth } from '@/shared/stores/AuthContext'
 import { useIncidents } from '@/features/incidents/hooks/useIncidents'
 import { AvailabilityIndicator } from '@/features/marshals/components/AvailabilityIndicator'
+import { Skeleton } from '@/components/ui/skeleton'
+import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Button } from '@/components/ui/button'
 import type { MarshalAvailability } from '@/shared/types'
 
 export default function ProfilePage() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
-  const { data: incidents } = useIncidents()
+  const { data: incidents, isLoading: loadingIncidents } = useIncidents()
 
   const hasActiveIncident = (incidents || []).some(
     (i) => i.status === 'IN_PROGRESS' && (i.assignedToId === user?.id || i.assignedTo?.id === user?.id),
@@ -31,7 +33,11 @@ export default function ProfilePage() {
           {user?.name?.charAt(0)?.toUpperCase() || '?'}
         </div>
         <h2 className="text-lg font-semibold text-[#0F172A]">{user?.name}</h2>
-        <AvailabilityIndicator availability={availability} className="mt-1" />
+        {loadingIncidents ? (
+          <Skeleton className="mt-1 h-4 w-20" />
+        ) : (
+          <AvailabilityIndicator availability={availability} className="mt-1" />
+        )}
         <p className="mt-1 text-xs text-[#64748B]">Mayor</p>
       </div>
 
@@ -59,6 +65,10 @@ export default function ProfilePage() {
             </div>
           </div>
         )}
+      </div>
+
+      <div className="border-t border-border pt-4">
+        <ThemeToggle className="w-full" />
       </div>
 
       <Button

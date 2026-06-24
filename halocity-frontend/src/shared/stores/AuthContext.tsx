@@ -5,7 +5,6 @@ interface AuthState {
   user: User | null
   token: string | null
   loading: boolean
-  viewAs: 'primary' | 'citizen'
 }
 
 type AuthAction =
@@ -13,13 +12,11 @@ type AuthAction =
   | { type: 'LOGOUT' }
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'RESTORE_SESSION'; payload: { user: User; token: string } }
-  | { type: 'SET_VIEW_AS'; payload: 'primary' | 'citizen' }
 
 interface AuthContextValue extends AuthState {
   login: (email: string, password: string) => Promise<void>
   register: (data: RegisterData) => Promise<void>
   logout: () => void
-  setViewAs: (mode: 'primary' | 'citizen') => void
 }
 
 export interface RegisterData {
@@ -37,15 +34,13 @@ const STORAGE_KEY = 'halocity_auth'
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
     case 'LOGIN_SUCCESS':
-      return { user: action.payload.user, token: action.payload.token, loading: false, viewAs: 'primary' }
+      return { user: action.payload.user, token: action.payload.token, loading: false }
     case 'LOGOUT':
-      return { user: null, token: null, loading: false, viewAs: 'primary' }
+      return { user: null, token: null, loading: false }
     case 'SET_LOADING':
       return { ...state, loading: action.payload }
     case 'RESTORE_SESSION':
-      return { user: action.payload.user, token: action.payload.token, loading: false, viewAs: 'primary' }
-    case 'SET_VIEW_AS':
-      return { ...state, viewAs: action.payload }
+      return { user: action.payload.user, token: action.payload.token, loading: false }
     default:
       return state
   }
@@ -55,7 +50,6 @@ const initialState: AuthState = {
   user: null,
   token: null,
   loading: true,
-  viewAs: 'primary',
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -117,12 +111,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'LOGOUT' })
   }
 
-  const setViewAs = (mode: 'primary' | 'citizen') => {
-    dispatch({ type: 'SET_VIEW_AS', payload: mode })
-  }
-
   return (
-    <AuthContext.Provider value={{ ...state, login, register, logout, setViewAs }}>
+    <AuthContext.Provider value={{ ...state, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   )

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --color-primary: #1E40AF;
   --color-primary-hover: #1E3A8A;
@@ -69,4 +73,55 @@
     @apply bg-[#F8FAFC] text-[#0F172A] antialiased;
     font-family: 'Inter', -apple-system, sans-serif;
   }
+}
+
+.dark {
+  --color-primary: #3B82F6;
+  --color-primary-hover: #2563EB;
+  --color-primary-light: #1E3A5F;
+  --color-primary-text: #60A5FA;
+
+  --color-success: #10B981;
+  --color-success-hover: #059669;
+  --color-success-light: #064E3B;
+  --color-success-text: #6EE7B7;
+
+  --color-warning: #F59E0B;
+  --color-warning-hover: #D97706;
+  --color-warning-light: #451A03;
+  --color-warning-text: #FCD34D;
+
+  --color-critical: #EF4444;
+  --color-critical-hover: #DC2626;
+  --color-critical-light: #450A0A;
+  --color-critical-text: #FCA5A5;
+
+  --color-bg: #0F172A;
+  --color-surface: #1E293B;
+  --color-surface-alt: #334155;
+  --color-border: #334155;
+  --color-border-strong: #475569;
+  --color-text-primary: #F1F5F9;
+  --color-text-secondary: #94A3B8;
+  --color-text-tertiary: #64748B;
+
+  --background: 222 84% 5%;
+  --foreground: 210 40% 98%;
+  --card: 222 84% 8%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222 84% 8%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 224 71% 60%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 217 33% 17%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217 33% 17%;
+  --input: 217 33% 17%;
+  --ring: 224 71% 60%;
 }

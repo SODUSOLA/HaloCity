@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Bell, AlertTriangle, Info, Car, ExternalLink } from 'lucide-react'
@@ -5,7 +6,7 @@ import { fetchNotifications } from '@/features/incidents/api/incidents.api'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { ListSkeleton } from '@/shared/components/LoadingSkeletons'
 
-const typeIcons: Record<string, React.ReactNode> = {
+const typeIcons: Record<string, ReactNode> = {
   INCIDENT_UPDATE: <AlertTriangle className="h-5 w-5 text-critical" />,
   ASSIGNMENT: <Car className="h-5 w-5 text-warning" />,
   ALERT: <AlertTriangle className="h-5 w-5 text-warning" />,

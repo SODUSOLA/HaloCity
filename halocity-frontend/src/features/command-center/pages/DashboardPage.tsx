@@ -25,7 +25,7 @@ import {
 } from '@/features/incidents/api/incidents.api'
 import { fetchZones } from '@/features/incidents/api/incidents.api'
 import { IncidentRow } from '@/features/incidents/components/IncidentRow'
-import { KPISkeleton } from '@/shared/components/LoadingSkeletons'
+import { KPISkeleton, CardSkeleton } from '@/shared/components/LoadingSkeletons'
 import { ErrorState } from '@/shared/components/ErrorState'
 import { isToday } from '@/shared/lib/geo'
 import { Button } from '@/components/ui/button'
@@ -98,7 +98,7 @@ export default function DashboardPage() {
     queryFn: fetchZones,
   })
 
-  const isLoading = summary.isLoading || live.isLoading
+  const isLoading = summary.isLoading || live.isLoading || zones.isLoading
 
   if (isLoading) {
     return (
@@ -391,7 +391,7 @@ export default function DashboardPage() {
                 Incidents per Hour (24h)
               </h3>
               {hourly.isLoading ? (
-                <p className="text-xs text-[#94A3B8]">Loading...</p>
+                <CardSkeleton />
               ) : hourly.data ? (
                 <ResponsiveContainer width="100%" height={180}>
                   <BarChart data={hourly.data as { hour: string; count: number }[]}>
@@ -414,7 +414,7 @@ export default function DashboardPage() {
             <div>
               <h3 className="mb-2 text-xs font-medium text-[#64748B]">Zone Heat</h3>
               {zoneHeat.isLoading ? (
-                <p className="text-xs text-[#94A3B8]">Loading...</p>
+                <CardSkeleton />
               ) : zoneHeat.data ? (
                 <div className="space-y-1">
                   {(zoneHeat.data as { zoneName: string; heatIndex: number; activeIncidents: number }[])
@@ -446,7 +446,7 @@ export default function DashboardPage() {
                 Response Times
               </h3>
               {responseTimes.isLoading ? (
-                <p className="text-xs text-[#94A3B8]">Loading...</p>
+                <CardSkeleton />
               ) : responseTimes.data ? (
                 (() => {
                   const rt = responseTimes.data as { overall: { avg: number | null; min: number | null; max: number | null } }

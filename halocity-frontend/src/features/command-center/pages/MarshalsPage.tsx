@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import { useMarshals, useAssignMarshalToZone, useEndMarshalAssignment } from '@/features/marshals/hooks/useMarshals'
 import { useZones } from '@/features/zones/hooks/useZones'
 import { AvailabilityIndicator } from '@/features/marshals/components/AvailabilityIndicator'
+import { Skeleton } from '@/components/ui/skeleton'
 import { TableSkeleton } from '@/shared/components/LoadingSkeletons'
 import { ErrorState } from '@/shared/components/ErrorState'
 import { Button } from '@/components/ui/button'
@@ -34,7 +35,7 @@ function deriveAvailability(
 
 export default function MarshalsPage() {
   const { data, isLoading, isError, refetch } = useMarshals()
-  const { data: zones } = useZones()
+  const { data: zones, isLoading: zonesLoading } = useZones()
   const assignMutation = useAssignMarshalToZone()
   const endMutation = useEndMarshalAssignment()
 
@@ -168,6 +169,9 @@ export default function MarshalsPage() {
             <DialogDescription>Select a zone to assign this mayor to.</DialogDescription>
           </DialogHeader>
           <div className="py-4">
+            {zonesLoading ? (
+              <Skeleton className="h-10 w-full rounded-md" />
+            ) : (
             <Select value={selectedZoneId} onValueChange={setSelectedZoneId}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a zone..." />
@@ -180,6 +184,7 @@ export default function MarshalsPage() {
                 ))}
               </SelectContent>
             </Select>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setAssignModal({ open: false, mayorId: '', mayorName: '' })}>

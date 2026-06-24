@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Mail, Phone, Shield, LogOut } from 'lucide-react'
 import { useAuth } from '@/shared/stores/AuthContext'
+import ThemeToggle from '@/shared/components/ThemeToggle'
 import { Button } from '@/components/ui/button'
 
 export default function ProfilePage() {
@@ -59,6 +60,10 @@ export default function ProfilePage() {
             </div>
           </div>
         )}
+      </div>
+
+      <div className="border-t border-border pt-4">
+        <ThemeToggle className="w-full" />
       </div>
 
       <Button

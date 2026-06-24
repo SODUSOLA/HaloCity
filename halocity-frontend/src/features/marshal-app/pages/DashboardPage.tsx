@@ -16,7 +16,7 @@ function greet() {
 }
 
 export default function DashboardPage() {
-  const { user, setViewAs } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const { data: incidents, isLoading } = useIncidents()
 
@@ -47,7 +47,7 @@ export default function DashboardPage() {
       </div>
 
       <button
-        onClick={() => { setViewAs('citizen'); navigate('/app/report') }}
+        onClick={() => navigate('/app/report')}
         className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
       >
         <PlusCircle className="h-4 w-4" />

@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react'
 import { NavLink } from 'react-router-dom'
 import {
   Home,
@@ -13,7 +14,7 @@ import type { Role } from '@/shared/types'
 interface NavItem {
   to: string
   label: string
-  icon: React.ReactNode
+  icon: ReactNode
   end?: boolean
 }
 
@@ -51,10 +52,11 @@ export function BottomNav({ role }: BottomNavProps) {
     <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-white">
       <div className="mx-auto flex max-w-lg justify-around">
         {nav.map((item) => (
-          <NavLink
+            <NavLink
             key={item.to}
             to={item.to}
             end={item.end}
+            aria-label={item.label}
             className={({ isActive }) =>
               cn(
                 'flex min-h-[56px] min-w-[56px] flex-col items-center justify-center gap-0.5 px-3 text-[10px] font-medium',

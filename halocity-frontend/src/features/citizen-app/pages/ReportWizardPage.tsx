@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft, ArrowRight, Upload, Mic, MicOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useCreateIncident } from '@/features/incidents/hooks/useIncidents'
 import { createIncidentSchema } from '@/features/incidents/types'
 import { fetchZones, uploadFile } from '@/features/incidents/api/incidents.api'
@@ -33,7 +34,7 @@ export default function ReportWizardPage() {
   const navigate = useNavigate()
   const createIncident = useCreateIncident()
 
-  const { data: zones } = useQuery({
+  const { data: zones, isLoading: zonesLoading } = useQuery({
     queryKey: ['zones'],
     queryFn: fetchZones,
   })
@@ -237,6 +238,9 @@ export default function ReportWizardPage() {
 
           <div className="border-t border-border pt-4">
             <label className="mb-2 block text-xs font-medium text-[#64748B]">Zone</label>
+            {zonesLoading ? (
+              <Skeleton className="h-11 w-full rounded-lg" />
+            ) : (
             <select
               className="w-full rounded-lg border border-border p-3 text-sm focus:border-primary focus:outline-none"
               value={watchZoneId || ''}
@@ -249,6 +253,7 @@ export default function ReportWizardPage() {
                 </option>
               ))}
             </select>
+            )}
             {form.formState.errors.zoneId && (
               <p className="mt-1 text-xs text-critical">{form.formState.errors.zoneId.message}</p>
             )}

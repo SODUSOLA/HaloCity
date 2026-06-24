@@ -1,10 +1,13 @@
 import { Navigate, useRoutes } from 'react-router-dom'
 import { useAuth } from '@/shared/stores/AuthContext'
+import { ThemeProvider } from '@/shared/stores/ThemeContext'
 import { CriticalBanner } from '@/shared/components/CriticalBanner'
 import { OfflineBanner } from '@/shared/components/OfflineBanner'
+import OnboardingTour from '@/shared/components/OnboardingTour'
 import { useSocket } from '@/shared/hooks/useSocket'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { Sidebar } from '@/shared/components/Sidebar'
+import LandingPage from '@/features/landing/LandingPage'
 import LoginPage from '@/features/auth/pages/LoginPage'
 import RegisterPage from '@/features/auth/pages/RegisterPage'
 import CitizenHome from '@/features/citizen-app/pages/HomePage'
@@ -32,26 +35,30 @@ import CommandEscalation from '@/features/command-center/pages/EscalationRulesPa
 import CommandIncidentMap from '@/features/command-center/pages/IncidentMapPage'
 
 export default function App() {
-  const { user, token, loading, viewAs } = useAuth()
-
-  const canAccessCitizen = token && (user?.role === 'CITIZEN' || viewAs === 'citizen')
+  const { user, token, loading } = useAuth()
+  const isAuthed = !!token && !!user
 
   const routing = useRoutes([
     {
+      path: '/',
+      element: isAuthed ? <RoleRedirect role={user!.role} /> : <LandingPage />,
+    },
+    {
       path: '/login',
-      element: token ? <RoleRedirect role={user?.role} viewAs={viewAs} /> : <LoginPage />,
+      element: isAuthed ? <RoleRedirect role={user!.role} /> : <LoginPage />,
     },
     {
       path: '/register',
-      element: token ? <RoleRedirect role={user?.role} viewAs={viewAs} /> : <RegisterPage />,
+      element: isAuthed ? <RoleRedirect role={user!.role} /> : <RegisterPage />,
     },
     {
       path: '/app/*',
-      element: canAccessCitizen ? (
+      element:
+        token && user?.role === 'CITIZEN' ? (
           <>
-            {viewAs === 'citizen' && <ViewAsBanner />}
             <OfflineBanner />
             <CriticalBanner />
+            <OnboardingTour role="CITIZEN" />
             <main className="min-h-screen bg-[#F8FAFC] pb-16">
               <CitizenRoutes />
             </main>
@@ -68,6 +75,7 @@ export default function App() {
           <>
             <OfflineBanner />
             <CriticalBanner />
+            <OnboardingTour role="MAYOR" />
             <main className="min-h-screen bg-[#F8FAFC] pb-16">
               <MarshalRoutes />
             </main>
@@ -94,7 +102,7 @@ export default function App() {
     },
     {
       path: '*',
-      element: <RootRedirect />,
+      element: isAuthed ? <RoleRedirect role={user!.role} /> : <Navigate to="/" replace />,
     },
   ])
 
@@ -107,10 +115,10 @@ export default function App() {
   }
 
   return (
-    <>
+    <ThemeProvider>
       <SocketManager token={token} />
       {routing}
-    </>
+    </ThemeProvider>
   )
 }
 
@@ -153,32 +161,7 @@ function CommandRoutes() {
   ])
 }
 
-function ViewAsBanner() {
-  const { setViewAs } = useAuth()
-  return (
-    <div className="flex items-center justify-between bg-primary px-4 py-2 text-sm text-white">
-      <span>Reporting as Citizen</span>
-      <button
-        onClick={() => setViewAs('primary')}
-        className="rounded bg-white/20 px-3 py-1 text-xs font-medium hover:bg-white/30"
-      >
-        Back to Dashboard
-      </button>
-    </div>
-  )
-}
-
-function RootRedirect() {
-  const { user, token, viewAs } = useAuth()
-  if (!token || !user) return <Navigate to="/login" replace />
-  if (viewAs === 'citizen') return <Navigate to="/app" replace />
-  if (user.role === 'ADMIN') return <Navigate to="/command" replace />
-  if (user.role === 'MAYOR') return <Navigate to="/marshal" replace />
-  return <Navigate to="/app" replace />
-}
-
-function RoleRedirect({ role, viewAs }: { role?: string; viewAs?: string }) {
-  if (viewAs === 'citizen') return <Navigate to="/app" replace />
+function RoleRedirect({ role }: { role: string }) {
   if (role === 'ADMIN') return <Navigate to="/command" replace />
   if (role === 'MAYOR') return <Navigate to="/marshal" replace />
   return <Navigate to="/app" replace />

@@ -12,6 +12,7 @@ import { Badge } from '@/shared/components/Badge'
 import { useIncident, useUpdateStatus, useAssignIncident } from '@/features/incidents/hooks/useIncidents'
 import { useMarshals } from '@/features/marshals/hooks/useMarshals'
 import { CardSkeleton } from '@/shared/components/LoadingSkeletons'
+import { Skeleton } from '@/components/ui/skeleton'
 import { IncidentStatusTimeline } from '@/features/incidents/components/IncidentStatusTimeline'
 import {
   Select,
@@ -33,7 +34,7 @@ export function IncidentDetailSheet({
   onOpenChange,
 }: IncidentDetailSheetProps) {
   const { data: incident, isLoading } = useIncident(incidentId)
-  const { data: marshals } = useMarshals()
+  const { data: marshals, isLoading: marshalsLoading } = useMarshals()
   const updateStatus = useUpdateStatus()
   const assignIncident = useAssignIncident()
   const [assignTo, setAssignTo] = useState('')
@@ -127,6 +128,9 @@ export function IncidentDetailSheet({
                 </p>
 
                 <div className="flex items-center gap-2">
+                  {marshalsLoading ? (
+                    <Skeleton className="h-10 flex-1 rounded-md" />
+                  ) : (
                   <Select value={assignTo} onValueChange={setAssignTo}>
                     <SelectTrigger className="flex-1">
                       <SelectValue placeholder="Assign mayor..." />
@@ -142,6 +146,7 @@ export function IncidentDetailSheet({
                         )}
                     </SelectContent>
                   </Select>
+                  )}
                   <Button
                     size="sm"
                     onClick={handleAssign}

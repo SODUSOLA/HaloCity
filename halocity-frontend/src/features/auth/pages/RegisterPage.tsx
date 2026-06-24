@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { cn } from '@/shared/lib/utils'
+import AuthLayout from '../components/AuthLayout'
 
 export default function RegisterPage() {
   const { register } = useAuth()
@@ -32,7 +33,7 @@ export default function RegisterPage() {
       email: '',
       phone: '',
       password: '',
-      role: 'CITIZEN',
+      role: 'CITIZEN' as const,
     },
   })
 
@@ -59,105 +60,117 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F8FAFC] p-4">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-primary text-lg font-bold text-white">
-            HC
-          </div>
-          <h1 className="text-xl font-semibold text-[#0F172A]">Create your account</h1>
-          <p className="mt-1 text-sm text-[#64748B]">Join HaloCity</p>
-        </div>
+    <AuthLayout>
+      <h1 className="text-2xl font-semibold text-slate-900">Create your account</h1>
+      <p className="mt-1 text-sm text-slate-500">Join HaloCity</p>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-4">
+          <div>
+            <FormLabel className="mb-2 block text-sm">I want to join as</FormLabel>
             <div className="flex gap-2">
-              {(['CITIZEN', 'MAYOR'] as const).map((role) => (
-                <button
-                  key={role}
-                  type="button"
-                  onClick={() => form.setValue('role', role)}
-                  className={cn(
-                    'flex-1 rounded-lg border p-3 text-center text-sm font-medium transition-colors',
-                    watchRole === role
-                      ? 'border-primary bg-primary-light text-primary-text'
-                      : 'border-border text-[#64748B] hover:border-primary/50',
-                  )}
-                >
-                  {role === 'CITIZEN' ? 'Citizen' : 'Mayor'}
-                </button>
-              ))}
+              <button
+                type="button"
+                onClick={() => form.setValue('role', 'CITIZEN')}
+                className={cn(
+                  'flex flex-1 flex-col items-center gap-1 rounded-lg border p-3 text-center text-sm transition-colors',
+                  watchRole === 'CITIZEN'
+                    ? 'border-primary bg-blue-50'
+                    : 'border-slate-200 bg-white hover:border-primary/50',
+                )}
+              >
+                <span className="text-lg">👤</span>
+                <span className="font-medium text-slate-900">Citizen</span>
+                <span className="text-[11px] text-slate-500">Report incidents and track status</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => form.setValue('role', 'MAYOR')}
+                className={cn(
+                  'flex flex-1 flex-col items-center gap-1 rounded-lg border p-3 text-center text-sm transition-colors',
+                  watchRole === 'MAYOR'
+                    ? 'border-primary bg-blue-50'
+                    : 'border-slate-200 bg-white hover:border-primary/50',
+                )}
+              >
+                <span className="text-lg">🛡️</span>
+                <span className="font-medium text-slate-900">Marshal</span>
+                <span className="text-[11px] text-slate-500">Respond to incidents in your zone</span>
+              </button>
             </div>
+          </div>
 
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="John Doe" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Full name</FormLabel>
+                <FormControl>
+                  <Input placeholder="John Doe" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="you@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="you@example.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone</FormLabel>
-                  <FormControl>
-                    <Input placeholder="+2348012345678" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone</FormLabel>
+                <FormControl>
+                  <Input placeholder="+2348012345678" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="Min. 8 characters with a number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Min. 8 characters with a number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <Button type="submit" className="w-full" disabled={pending}>
-              {pending ? 'Creating account...' : 'Create account'}
-            </Button>
-          </form>
-        </Form>
+          <Button type="submit" className="w-full" disabled={pending}>
+            {pending ? 'Creating account...' : 'Create account'}
+          </Button>
+        </form>
+      </Form>
 
-        <p className="mt-6 text-center text-sm text-[#64748B]">
-          Already have an account?{' '}
-          <Link to="/login" className="font-medium text-primary hover:underline">
-            Sign in
-          </Link>
-        </p>
-      </div>
-    </div>
+      <p className="mt-6 text-center text-sm text-[#64748B]">
+        Already have an account?{' '}
+        <Link to="/login" className="font-medium text-primary hover:underline">
+          Sign in →
+        </Link>
+      </p>
+      <p className="mt-2 text-center text-[11px] text-slate-400">
+        Admin accounts are provisioned internally.
+      </p>
+    </AuthLayout>
   )
 }

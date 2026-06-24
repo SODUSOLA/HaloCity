@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { useAuth } from '@/shared/stores/AuthContext'
+import ThemeToggle from './ThemeToggle'
 
 const navItems = [
   { to: '/command', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -42,10 +43,11 @@ export function Sidebar() {
 
       <nav className="flex-1 space-y-1 p-2">
         {navItems.map((item) => (
-          <NavLink
+            <NavLink
             key={item.to}
             to={item.to}
             end={item.end}
+            aria-label={item.label}
             className={({ isActive }) =>
               cn(
                 'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
@@ -65,6 +67,7 @@ export function Sidebar() {
         <div className="mb-2 px-3 text-xs text-[#94A3B8]">
           {user?.name}
         </div>
+        <ThemeToggle className="mb-1 w-full" />
         <button
           onClick={handleLogout}
           className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-[#64748B] hover:bg-surface-alt hover:text-[#0F172A]"
