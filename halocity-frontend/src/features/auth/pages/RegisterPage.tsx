@@ -64,7 +64,7 @@ export default function RegisterPage() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-4">
           <div>
-            <FormLabel className="mb-2 block text-sm">I want to join as</FormLabel>
+            <p className="mb-2 block text-sm font-medium text-foreground">I want to join as</p>
             <div className="flex gap-2">
               <button
                 type="button"
