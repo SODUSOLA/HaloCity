@@ -7,7 +7,7 @@ import { emitIncidentCreated, emitIncidentUpdated } from '../../websocket/socket
 import { dispatch } from '../notifications/notifications.service.js';
 import { createFromIncident } from '../maintenance/maintenance.service.js';
 
-export async function createIncident(reporterId, data) {
+export async function createIncident(data, requestingUser) {
   const zone = await prisma.zone.findUnique({ where: { id: data.zoneId } });
   if (!zone || !zone.isActive) {
     throw new NotFoundError('Zone not found or inactive');
@@ -24,9 +24,11 @@ export async function createIncident(reporterId, data) {
       title: data.title,
       description: data.description,
       zoneId: data.zoneId,
-      reporterId,
-      locationLat: data.locationLat,
-      locationLng: data.locationLng,
+      source: 'APP',
+      reporterId: requestingUser ? requestingUser.id : null,
+      reporterPhone: data.reporterPhone || null,
+      locationLat: data.locationLat || null,
+      locationLng: data.locationLng || null,
       mediaUrls: data.mediaUrls || [],
       status: 'PENDING',
     },
@@ -139,8 +141,14 @@ export async function updateStatus(id, user, data) {
   }
 
   const updateData = { status: data.status };
-  if (data.status === 'RESOLVED') {
-    updateData.resolvedAt = new Date();
+  if (data.status === 'ACKNOWLEDGED' && !incident.acknowledgedAt) {
+    updateData.acknowledgedAt = new Date();
+  }
+  if (data.status === 'RESOLVED' || data.status === 'CLOSED') {
+    updateData.resolvedAt = data.status === 'RESOLVED' ? new Date() : undefined;
+    if (data.resolutionNote) {
+      updateData.resolutionNote = data.resolutionNote;
+    }
   }
 
   const updated = await prisma.incident.update({
@@ -182,6 +190,28 @@ export async function restoreIncident(id) {
     where: { id },
     data: { deletedAt: null },
   });
+}
+
+export async function getIncidentByReferenceCode(referenceCode) {
+  const incident = await prisma.incident.findUnique({
+    where: { referenceCode },
+    select: {
+      referenceCode: true,
+      type: true,
+      severity: true,
+      status: true,
+      zone: { select: { name: true } },
+      createdAt: true,
+      resolvedAt: true,
+      resolutionNote: true,
+    },
+  });
+
+  if (!incident) {
+    throw new NotFoundError('Report not found. Please check your reference code.');
+  }
+
+  return incident;
 }
 
 export async function assignIncident(id, mayorId) {

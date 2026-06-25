@@ -3,8 +3,13 @@ import { success } from '../../shared/response.js';
 import * as incidentService from './incidents.service.js';
 
 export const create = catchAsync(async (req, res) => {
-  const incident = await incidentService.createIncident(req.user.id, req.body);
+  const incident = await incidentService.createIncident(req.body, req.user || null);
   return success(res, 'Incident reported successfully', incident, 201);
+});
+
+export const trackByCode = catchAsync(async (req, res) => {
+  const incident = await incidentService.getIncidentByReferenceCode(req.params.referenceCode);
+  return success(res, 'Incident retrieved', incident);
 });
 
 export const getAll = catchAsync(async (req, res) => {

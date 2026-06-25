@@ -106,6 +106,15 @@ export default function ReportDetailPage() {
         </div>
       )}
 
+      {incident.resolutionNote && (
+        <div className="rounded-lg border border-border bg-surface-alt p-4">
+          <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Resolution Note
+          </p>
+          <p className="whitespace-pre-wrap text-sm text-foreground">{incident.resolutionNote}</p>
+        </div>
+      )}
+
       <div>
         <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
           Status Timeline

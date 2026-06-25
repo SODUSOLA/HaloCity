@@ -8,6 +8,7 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/shared/components/Badge'
 import { useIncident, useUpdateStatus, useAssignIncident } from '@/features/incidents/hooks/useIncidents'
 import { useMarshals } from '@/features/marshals/hooks/useMarshals'
@@ -38,6 +39,7 @@ export function IncidentDetailSheet({
   const updateStatus = useUpdateStatus()
   const assignIncident = useAssignIncident()
   const [assignTo, setAssignTo] = useState('')
+  const [resolutionNote, setResolutionNote] = useState('')
 
   const handleAssign = async () => {
     if (!assignTo) return
@@ -52,8 +54,9 @@ export function IncidentDetailSheet({
 
   const handleStatusUpdate = async (status: string) => {
     try {
-      await updateStatus.mutateAsync({ id: incidentId, status })
+      await updateStatus.mutateAsync({ id: incidentId, status, resolutionNote: resolutionNote || undefined })
       toast.success(`Status updated to ${status.replace('_', ' ')}`)
+      setResolutionNote('')
     } catch {
       toast.error('Failed to update status')
     }
@@ -156,6 +159,20 @@ export function IncidentDetailSheet({
                   </Button>
                 </div>
 
+                {incident.status === 'IN_PROGRESS' && (
+                  <div className="space-y-2">
+                    <label className="block text-xs font-medium text-muted-foreground">
+                      Resolution Note <span className="text-muted-foreground/60">(optional)</span>
+                    </label>
+                    <Textarea
+                      placeholder="Describe how the incident was resolved..."
+                      value={resolutionNote}
+                      onChange={(e) => setResolutionNote(e.target.value)}
+                      rows={2}
+                      className="resize-none"
+                    />
+                  </div>
+                )}
                 <div className="flex gap-2">
                   {incident.status === 'PENDING' && (
                     <Button
@@ -175,6 +192,15 @@ export function IncidentDetailSheet({
                     </Button>
                   )}
                 </div>
+              </div>
+            )}
+
+            {incident.resolutionNote && (
+              <div className="rounded-lg border border-border bg-surface-alt p-4">
+                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Resolution Note
+                </p>
+                <p className="whitespace-pre-wrap text-sm text-foreground">{incident.resolutionNote}</p>
               </div>
             )}
 

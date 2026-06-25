@@ -12,6 +12,7 @@ export const createIncidentSchema = z.object({
   zoneId: z.string().uuid('Select a zone'),
   locationLat: z.number().optional(),
   locationLng: z.number().optional(),
+  reporterPhone: z.string().optional(),
   mediaUrls: z.array(z.string()).max(5).default([]),
 })
 

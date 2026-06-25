@@ -54,6 +54,7 @@ export interface Incident {
   zoneId?: string | null
   zone?: Zone | null
   resolvedAt?: string | null
+  resolutionNote?: string | null
   createdAt: string
   updatedAt: string
 }

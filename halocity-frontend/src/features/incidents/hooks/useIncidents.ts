@@ -42,8 +42,8 @@ export function useCreateIncident() {
 export function useUpdateStatus() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: string }) =>
-      updateIncidentStatus(id, status),
+    mutationFn: ({ id, status, resolutionNote }: { id: string; status: string; resolutionNote?: string }) =>
+      updateIncidentStatus(id, status, resolutionNote),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['incidents', id] })
       queryClient.invalidateQueries({ queryKey: ['incidents'] })

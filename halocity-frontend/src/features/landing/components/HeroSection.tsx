@@ -58,6 +58,12 @@ export default function HeroSection() {
           </Link>
         </div>
 
+        <div className="mt-4">
+          <Link to="/report" className="text-sm text-blue-400 underline underline-offset-4 hover:text-blue-300">
+            Report an incident (no account needed)
+          </Link>
+        </div>
+
         <p className="mt-6 text-xs text-slate-500">
           Already deployed · 55 users · 10 city zones · Live on Render + Vercel
         </p>

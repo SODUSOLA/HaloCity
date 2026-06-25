@@ -6,7 +6,6 @@ import HowItWorksSection from './components/HowItWorksSection'
 import FeaturesSection from './components/FeaturesSection'
 import StatsSection from './components/StatsSection'
 import RolesSection from './components/RolesSection'
-import NetworkSection from './components/NetworkSection'
 import LandingFooter from './components/LandingFooter'
 
 export default function LandingPage() {
@@ -20,7 +19,6 @@ export default function LandingPage() {
       <FeaturesSection />
       <StatsSection />
       <RolesSection />
-      <NetworkSection />
       <LandingFooter />
     </div>
   )

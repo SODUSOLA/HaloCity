@@ -66,17 +66,20 @@ export async function getZoneHeat() {
 
 export async function getResponseTimes() {
   const resolved = await prisma.incident.findMany({
-    where: { status: 'RESOLVED', resolvedAt: { not: null } },
-    select: { createdAt: true, resolvedAt: true, type: true, severity: true },
+    where: { status: { in: ['RESOLVED', 'CLOSED'] }, resolvedAt: { not: null } },
+    select: { createdAt: true, acknowledgedAt: true, resolvedAt: true, type: true, severity: true },
   });
 
   const times = resolved
-    .map((inc) => ({
-      ...inc,
-      responseMinutes: Math.round(
-        (inc.resolvedAt.getTime() - inc.createdAt.getTime()) / 60000,
-      ),
-    }))
+    .map((inc) => {
+      const start = inc.acknowledgedAt || inc.createdAt;
+      return {
+        ...inc,
+        responseMinutes: Math.round(
+          (inc.resolvedAt.getTime() - start.getTime()) / 60000,
+        ),
+      };
+    })
     .filter((inc) => inc.responseMinutes >= 0);
 
   if (times.length === 0) {

@@ -56,6 +56,9 @@ export default function LandingNav() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
+          <Link to="/report">
+            <Button variant="ghost" size="sm" className="text-slate-600 hover:text-primary">Report Incident</Button>
+          </Link>
           <Link to="/login">
             <Button variant="outline" size="sm">Sign In</Button>
           </Link>
@@ -85,6 +88,9 @@ export default function LandingNav() {
             </button>
           ))}
           <div className="mt-3 flex flex-col gap-2 px-3">
+            <Link to="/report" onClick={() => setMenuOpen(false)}>
+              <Button variant="outline" className="w-full border-dashed">Report Incident</Button>
+            </Link>
             <Link to="/login" onClick={() => setMenuOpen(false)}>
               <Button variant="outline" className="w-full">Sign In</Button>
             </Link>

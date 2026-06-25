@@ -7,8 +7,8 @@ import { createZoneSchema, updateZoneSchema } from './zones.validation.js';
 
 const router = Router();
 
-router.get('/', authMiddleware, zoneController.getZones);
-router.get('/:id', authMiddleware, zoneController.getZone);
+router.get('/', zoneController.getZones);
+router.get('/:id', zoneController.getZone);
 router.post('/', authMiddleware, requireRole('ADMIN'), validate(createZoneSchema), zoneController.createZone);
 router.patch('/:id', authMiddleware, requireRole('ADMIN'), validate(updateZoneSchema), zoneController.updateZone);
 router.patch('/:id/status', authMiddleware, requireRole('ADMIN'), zoneController.setStatus);

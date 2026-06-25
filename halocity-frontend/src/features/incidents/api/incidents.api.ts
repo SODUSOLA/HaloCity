@@ -26,8 +26,8 @@ export async function createIncident(input: CreateIncidentInput): Promise<Incide
   return data
 }
 
-export async function updateIncidentStatus(id: string, status: string): Promise<Incident> {
-  const { data } = await api.patch<Incident>(`/incidents/${id}/status`, { status })
+export async function updateIncidentStatus(id: string, status: string, resolutionNote?: string): Promise<Incident> {
+  const { data } = await api.patch<Incident>(`/incidents/${id}/status`, { status, resolutionNote })
   return data
 }
 
@@ -44,6 +44,21 @@ export async function fetchDashboardSummary() {
 export async function fetchLiveIncidents() {
   const { data } = await api.get('/dashboard/incidents/live')
   return data
+}
+
+export interface MarshalMapEntry {
+  mayorId: string
+  name: string
+  zoneId: string
+  zoneName: string
+  lat: number | null
+  lng: number | null
+  lastSeen: string | null
+}
+
+export async function fetchMarshalMap(): Promise<MarshalMapEntry[]> {
+  const { data } = await api.get('/dashboard/marshals/map')
+  return data.data ?? data
 }
 
 export async function fetchNotifications() {
@@ -63,6 +78,11 @@ export async function uploadFile(file: File): Promise<string> {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
   return data.url
+}
+
+export async function trackIncident(referenceCode: string) {
+  const { data } = await api.get(`/incidents/track/${referenceCode}`)
+  return data
 }
 
 // Escalation Rules

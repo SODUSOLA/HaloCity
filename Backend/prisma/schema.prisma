@@ -167,18 +167,22 @@ model Incident {
   title         String
   description   String?
   zoneId        String
-  reporterId    String
+  reporterId    String?
+  reporterPhone String?
+  source        String           @default("APP")
   assignedTo    String?
   locationLat   Float?
   locationLng   Float?
-  mediaUrls     Json             @default("[]")
-  resolvedAt    DateTime?
-  deletedAt     DateTime?
+  mediaUrls      Json             @default("[]")
+  resolvedAt     DateTime?
+  acknowledgedAt DateTime?
+  resolutionNote String?
+  deletedAt      DateTime?
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
 
   zone             Zone              @relation(fields: [zoneId], references: [id])
-  reporter         User              @relation("ReportedIncidents", fields: [reporterId], references: [id])
+  reporter         User?             @relation("ReportedIncidents", fields: [reporterId], references: [id])
   assignee         User?             @relation("AssignedIncidents", fields: [assignedTo], references: [id])
   escalationLogs   EscalationLog[]
   maintenanceTicket MaintenanceTicket?

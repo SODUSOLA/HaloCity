@@ -10,6 +10,10 @@ import { Sidebar } from '@/shared/components/Sidebar'
 import LandingPage from '@/features/landing/LandingPage'
 import LoginPage from '@/features/auth/pages/LoginPage'
 import RegisterPage from '@/features/auth/pages/RegisterPage'
+import ReportSelectorPage from '@/features/report/pages/ReportSelectorPage'
+import AnonymousReportPage from '@/features/report/pages/AnonymousReportPage'
+import ReportConfirmationPage from '@/features/report/pages/ReportConfirmationPage'
+import TrackReportPage from '@/features/report/pages/TrackReportPage'
 import CitizenHome from '@/features/citizen-app/pages/HomePage'
 import ReportWizardPage from '@/features/citizen-app/pages/ReportWizardPage'
 import MyReportsPage from '@/features/citizen-app/pages/MyReportsPage'
@@ -50,6 +54,22 @@ export default function App() {
     {
       path: '/register',
       element: isAuthed ? <RoleRedirect role={user!.role} /> : <RegisterPage />,
+    },
+    {
+      path: '/report',
+      element: <ReportSelectorPage />,
+    },
+    {
+      path: '/report/anonymous',
+      element: <AnonymousReportPage />,
+    },
+    {
+      path: '/report/confirmation',
+      element: <ReportConfirmationPage />,
+    },
+    {
+      path: '/track',
+      element: <TrackReportPage />,
     },
     {
       path: '/app/*',

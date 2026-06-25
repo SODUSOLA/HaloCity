@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, MapPin, Calendar, User, Phone, Check, ChevronRight } from 'lucide-react'
 import { toast } from 'sonner'
@@ -8,6 +9,7 @@ import { ErrorState } from '@/shared/components/ErrorState'
 import { Button } from '@/components/ui/button'
 import { IncidentStatusTimeline } from '@/features/incidents/components/IncidentStatusTimeline'
 import { cn } from '@/shared/lib/utils'
+import { Textarea } from '@/components/ui/textarea'
 
 const STATUS_FLOW = [
   { status: 'PENDING', label: 'Reported' },
@@ -20,11 +22,13 @@ export default function AssignmentDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { data: incident, isLoading, isError, refetch } = useIncident(id!)
   const updateStatus = useUpdateStatus()
+  const [resolutionNote, setResolutionNote] = useState('')
 
   const handleTransition = async (status: string) => {
     try {
-      await updateStatus.mutateAsync({ id: id!, status })
+      await updateStatus.mutateAsync({ id: id!, status, resolutionNote: resolutionNote || undefined })
       toast.success(`Status updated to ${status.replace('_', ' ')}`)
+      setResolutionNote('')
     } catch {
       toast.error('Failed to update status')
     }
@@ -178,17 +182,41 @@ export default function AssignmentDetailPage() {
       </div>
 
       {nextStatus && incident.status !== 'RESOLVED' && incident.status !== 'CLOSED' && (
-        <Button
-          className="w-full"
-          variant={nextStatus === 'RESOLVED' ? 'default' : 'default'}
-          size="lg"
-          onClick={() => handleTransition(nextStatus)}
-          disabled={updateStatus.isPending}
-        >
-          {nextStatus === 'ACKNOWLEDGED' && 'Accept Assignment'}
-          {nextStatus === 'IN_PROGRESS' && 'Mark En Route'}
-          {nextStatus === 'RESOLVED' && 'Resolve Incident'}
-        </Button>
+        <div className="space-y-3">
+          {nextStatus === 'RESOLVED' && (
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
+                Resolution Note <span className="text-muted-foreground/60">(optional)</span>
+              </label>
+              <Textarea
+                placeholder="Describe how the incident was resolved..."
+                value={resolutionNote}
+                onChange={(e) => setResolutionNote(e.target.value)}
+                rows={3}
+                className="resize-none"
+              />
+            </div>
+          )}
+          <Button
+            className="w-full"
+            size="lg"
+            onClick={() => handleTransition(nextStatus)}
+            disabled={updateStatus.isPending}
+          >
+            {nextStatus === 'ACKNOWLEDGED' && 'Accept Assignment'}
+            {nextStatus === 'IN_PROGRESS' && 'Mark En Route'}
+            {nextStatus === 'RESOLVED' && 'Resolve Incident'}
+          </Button>
+        </div>
+      )}
+
+      {incident.resolutionNote && (
+        <div className="rounded-lg border border-border bg-surface-alt p-4">
+          <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Resolution Note
+          </p>
+          <p className="whitespace-pre-wrap text-sm text-foreground">{incident.resolutionNote}</p>
+        </div>
       )}
 
       <div>

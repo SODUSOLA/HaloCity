@@ -1,63 +1,50 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import { useQuery } from '@tanstack/react-query'
-import { fetchLiveIncidents } from '@/features/incidents/api/incidents.api'
+import { fetchLiveIncidents, fetchMarshalMap } from '@/features/incidents/api/incidents.api'
 import { CardSkeleton } from '@/shared/components/LoadingSkeletons'
 import { ErrorState } from '@/shared/components/ErrorState'
 import type { Incident } from '@/shared/types'
 
-function CenterOnIncidents({ incidents }: { incidents: Incident[] }) {
-  const map = useMap()
-  useMemo(() => {
-    if (incidents.length === 0) return
-    const bounds = L.latLngBounds(
-      incidents.map((i) => [i.locationLat!, i.locationLng!]),
-    )
-    map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 })
-  }, [incidents, map])
-  return null
+const SEVERITY_COLORS: Record<string, string> = {
+  CRITICAL: '#DC2626',
+  HIGH: '#D97706',
+  MEDIUM: '#2563EB',
+  LOW: '#059669',
 }
 
-function SeverityIcon({ severity }: { severity: string }) {
-  const colors: Record<string, string> = {
-    CRITICAL: '#DC2626',
-    HIGH: '#D97706',
-    MEDIUM: '#1E40AF',
-    LOW: '#059669',
-  }
+const SEVERITY_LABELS: Record<string, string> = { CRITICAL: 'Crit', HIGH: 'High', MEDIUM: 'Med', LOW: 'Low' }
+
+function createSeverityIcon(severity: string) {
+  const color = SEVERITY_COLORS[severity] || '#94A3B8'
   return L.divIcon({
     className: '',
-    html: `<div style="background:${colors[severity] || '#94A3B8'};width:24px;height:24px;border-radius:50%;border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:bold">!</div>`,
-    iconSize: [24, 24],
-    iconAnchor: [12, 12],
+    html: `<div style="background:${color};width:28px;height:28px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:white;font-size:9px;font-weight:700;line-height:1">${SEVERITY_LABELS[severity] || '?'}</div>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
   })
 }
 
-function IncidentMarkers({ incidents }: { incidents: Incident[] }) {
-  return (
-    <>
-      {incidents.map((inc) => (
-        <Marker
-          key={inc.id}
-          position={[inc.locationLat!, inc.locationLng!]}
-          icon={SeverityIcon({ severity: inc.severity })}
-        >
-          <Popup>
-            <div className="min-w-[180px] space-y-1.5">
-              <p className="text-xs font-mono text-muted-foreground">{inc.referenceCode}</p>
-              <p className="text-sm font-medium text-foreground">{inc.title || inc.type.replace('_', ' ')}</p>
-              <p className="text-xs text-muted-foreground">{inc.zone?.name || 'Unknown'}</p>
-              <div className="flex gap-1">
-                <span className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] text-red-600">{inc.severity}</span>
-                <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-600">{inc.status.replace('_', ' ')}</span>
-              </div>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
-    </>
-  )
+function createMayorIcon() {
+  return L.divIcon({
+    className: '',
+    html: `<div style="background:#6366F1;width:20px;height:20px;border-radius:4px;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:700">M</div>`,
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+  })
+}
+
+function FitBounds({ items }: { items: { lat: number; lng: number }[] }) {
+  const map = useMap()
+  useEffect(() => {
+    if (items.length === 0) return
+    const bounds = L.latLngBounds(items.map((p) => [p.lat, p.lng]))
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 })
+    }
+  }, [items, map])
+  return null
 }
 
 export default function IncidentMapPage() {
@@ -69,9 +56,13 @@ export default function IncidentMapPage() {
     queryFn: fetchLiveIncidents,
   })
 
-  const isLoading = live.isLoading
+  const marshalQuery = useQuery({
+    queryKey: ['dashboard', 'marshals', 'map'],
+    queryFn: fetchMarshalMap,
+    enabled: showMayors,
+  })
 
-  if (isLoading) {
+  if (live.isLoading) {
     return (
       <div className="p-6">
         <h1 className="mb-6 text-xl font-semibold text-foreground">Incident Map</h1>
@@ -89,25 +80,36 @@ export default function IncidentMapPage() {
     )
   }
 
-  const allIncidents: Incident[] = (live.data as any)?.data || []
+  const rawIncidents: Incident[] = (live.data as any)?.data ?? live.data ?? []
+  const mayors = (marshalQuery.data as any[]) ?? []
 
-  const withCoords = allIncidents.filter(
-    (i) => i.locationLat != null && i.locationLng != null,
+  const withCoords = rawIncidents.filter(
+    (i): i is Incident & { locationLat: number; locationLng: number } =>
+      i.locationLat != null && i.locationLng != null,
   )
 
   const filtered = filterSeverity
     ? withCoords.filter((i) => i.severity === filterSeverity)
     : withCoords
 
+  const visibleMayors = showMayors
+    ? mayors.filter((m: any) => m.lat != null && m.lng != null)
+    : []
+
   const center: [number, number] =
     filtered.length > 0
       ? [filtered[0]!.locationLat!, filtered[0]!.locationLng!]
-      : [6.5244, 3.3792]
+      : [6.4531, 3.3958]
 
   const severityCounts = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map((s) => ({
     severity: s,
     count: withCoords.filter((i) => i.severity === s).length,
   }))
+
+  const mayorPoints = useMemo(
+    () => visibleMayors.map((m: any) => ({ lat: m.lat, lng: m.lng })),
+    [visibleMayors],
+  )
 
   return (
     <div className="space-y-4 p-6">
@@ -123,21 +125,26 @@ export default function IncidentMapPage() {
               }
               className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 filterSeverity === severity
-                  ? 'bg-[#0F172A] text-white'
+                  ? 'bg-foreground text-background'
                   : 'bg-surface-alt text-muted-foreground hover:bg-border'
               }`}
             >
+              <span
+                className="mr-1.5 inline-block h-2 w-2 rounded-full"
+                style={{ backgroundColor: SEVERITY_COLORS[severity] }}
+              />
               {severity} ({count})
             </button>
           ))}
         </div>
-        <label className="flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground">
+        <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-alt">
           <input
             type="checkbox"
             checked={showMayors}
             onChange={() => setShowMayors((v) => !v)}
+            className="h-3.5 w-3.5"
           />
-          Show Mayors
+          Show Mayors ({mayors.length})
         </label>
       </div>
 
@@ -152,8 +159,61 @@ export default function IncidentMapPage() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <CenterOnIncidents incidents={filtered} />
-            <IncidentMarkers incidents={filtered} />
+            <FitBounds
+              items={[
+                ...filtered.map((i) => ({ lat: i.locationLat, lng: i.locationLng })),
+                ...mayorPoints,
+              ]}
+            />
+
+            {filtered.map((inc) => (
+              <Marker
+                key={inc.id}
+                position={[inc.locationLat, inc.locationLng]}
+                icon={createSeverityIcon(inc.severity)}
+              >
+                <Popup>
+                  <div className="min-w-[200px] space-y-1.5">
+                    <p className="text-xs font-mono text-muted-foreground">{inc.referenceCode}</p>
+                    <p className="text-sm font-medium text-foreground">{inc.title || inc.type.replace('_', ' ')}</p>
+                    <p className="text-xs text-muted-foreground">{inc.zone?.name || 'Unknown zone'}</p>
+                    <div className="flex flex-wrap gap-1">
+                      <span
+                        className="rounded px-1.5 py-0.5 text-[10px] font-medium text-white"
+                        style={{ backgroundColor: SEVERITY_COLORS[inc.severity] || '#94A3B8' }}
+                      >
+                        {inc.severity}
+                      </span>
+                      <span className="rounded bg-surface-alt px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                        {inc.status.replace('_', ' ')}
+                      </span>
+                    </div>
+                    {(inc as any).assignee?.name && (
+                      <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <span className="inline-block h-1.5 w-1.5 rounded-sm bg-indigo-400" />
+                        {(inc as any).assignee.name}
+                      </p>
+                    )}
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+
+            {visibleMayors.map((m: any) => (
+              <Marker key={m.mayorId} position={[m.lat, m.lng]} icon={createMayorIcon()}>
+                <Popup>
+                  <div className="min-w-[160px] space-y-1">
+                    <p className="text-sm font-medium text-foreground">{m.name}</p>
+                    <p className="text-xs text-muted-foreground">{m.zoneName}</p>
+                    {m.lastSeen && (
+                      <p className="text-[10px] text-muted-foreground/60">
+                        Updated {new Date(m.lastSeen).toLocaleTimeString()}
+                      </p>
+                    )}
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
           </MapContainer>
         </div>
       ) : (

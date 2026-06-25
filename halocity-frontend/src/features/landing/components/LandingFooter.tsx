@@ -47,6 +47,9 @@ export default function LandingFooter() {
             <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Access</h4>
             <ul className="space-y-2">
               <li>
+                <Link to="/report" className="text-xs text-slate-400 transition-colors hover:text-white">Report Incident (Guest)</Link>
+              </li>
+              <li>
                 <Link to="/login" className="text-xs text-slate-400 transition-colors hover:text-white">Sign In</Link>
               </li>
               <li>

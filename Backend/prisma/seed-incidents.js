@@ -183,9 +183,13 @@ async function main() {
       // Generate timestamps
       const now = new Date();
       const createdAt = new Date(now.getTime() - randomInt(0, 48) * 60 * 60 * 1000);
+      let acknowledgedAt = null;
       let resolvedAt = null;
+      if (cfg.status !== 'PENDING') {
+        acknowledgedAt = new Date(createdAt.getTime() + randomInt(1, 10) * 60 * 1000);
+      }
       if (cfg.status === 'RESOLVED' || cfg.status === 'CLOSED') {
-        resolvedAt = new Date(createdAt.getTime() + randomInt(5, 120) * 60 * 1000);
+        resolvedAt = new Date((acknowledgedAt || createdAt).getTime() + randomInt(5, 120) * 60 * 1000);
       }
 
       // Coordinates within Lagos (approx 6.45, 3.4)
@@ -211,6 +215,7 @@ async function main() {
           locationLng: lng,
           mediaUrls: [],
           createdAt,
+          acknowledgedAt,
           resolvedAt,
           updatedAt: cfg.status === 'CLOSED' || cfg.status === 'RESOLVED' ? (resolvedAt || createdAt) : createdAt,
         },

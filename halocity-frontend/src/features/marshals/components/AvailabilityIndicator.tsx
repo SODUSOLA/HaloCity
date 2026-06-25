@@ -8,7 +8,7 @@ interface AvailabilityIndicatorProps {
 
 const config: Record<MarshalAvailability, { label: string; color: string }> = {
   available: { label: 'Available', color: 'bg-success' },
-  busy: { label: 'Busy', color: 'bg-warning' },
+  busy: { label: 'Active', color: 'bg-warning' },
   offline: { label: 'Offline', color: 'bg-muted-foreground/40' },
 }
 

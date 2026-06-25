@@ -7,12 +7,14 @@ export const createIncidentSchema = z.object({
   zoneId: z.string().uuid(),
   locationLat: z.number().optional(),
   locationLng: z.number().optional(),
+  reporterPhone: z.string().optional(),
   mediaUrls: z.array(z.string().url()).optional().default([]),
 });
 
 export const updateStatusSchema = z.object({
   status: z.enum(['ACKNOWLEDGED', 'IN_PROGRESS', 'RESOLVED', 'CLOSED']),
   note: z.string().optional(),
+  resolutionNote: z.string().max(1000).optional(),
 });
 
 export const assignIncidentSchema = z.object({
